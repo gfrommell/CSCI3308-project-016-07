@@ -1,0 +1,1 @@
+All course related documents should be stored in this folder.
