@@ -70,3 +70,10 @@ app.use(
     extended: true,
   })
 );
+
+
+const user = {
+  username: undefined,
+  password: undefined,
+  email: undefined
+}
