@@ -1,0 +1,1029 @@
+Responses from NPS API Documentation
+
++-----------------------------------
+
+/activities
+Retrieve categories of activities (astronomy, hiking, wildlife watching, etc.) possible in national parks.
+
+Code	Description
+200	    successful operation
+
+Example Response
+Model
+[
+  {
+    "total": "2",
+    "data": [
+      [
+        {
+          "id": "FEDA3DF8-B871-4C1A-BB96-32823860B174",
+          "name": "Arts and Culture"
+        },
+        {
+          "id": "F07B0BA0-A3E9-4C82-9746-57DA4953C2E6",
+          "name": "Astronomy"
+        }
+      ]
+    ],
+    "limit": "50",
+    "start": "0"
+  }
+]
+
+400	    Invalid status value
+
++-----------------------------------
+
+/campgrounds
+Retrieve data about National Park Service campgrounds including addresses, contacts, description, hours of operation, etc.
+
+Code	    Description
+200	        successful operation
+
+Example Response
+Model
+[
+  {
+    "total": 509,
+    "data": [
+      [
+        {
+          "accessibility": [
+            {
+              "wheelchairaccess": "Some restrooms are wheelchair accessible. The campground is mainly accessed by transit bus, around half of which are wheelchair accessible.",
+              "internetinfo": "",
+              "rvallowed": 0,
+              "cellphoneinfo": "",
+              "firestovepolicy": "Open fires are prohibited at Wonder Lake Campground. Bring a camping stove of some kind to cook your meals.",
+              "rvmaxlength": 0,
+              "additionalinfo": "",
+              "trailermaxlength": 0,
+              "adainfo": "Paths between campsites vary from compact gravel to muddy, rocky surfaces. The campground is laid out with some sites on a small hill above the level of the main campground road, while others are level with or slightly downhill from the level of the road.",
+              "rvinfo": "This is a tent-only campsite—RVs and trailers are prohibited at Wonder Lake.",
+              "accessroads": [
+                "Unpaved Roads - 4WD/High clearance required"
+              ],
+              "trailerallowed": 0,
+              "classifications": [
+                "Limited Development Campground"
+              ]
+            }
+          ],
+          "addresses": [
+            {
+              "postalCode": 99755,
+              "city": "Denali Park",
+              "stateCode": "AK",
+              "countryCode": "US",
+              "provinceTerritoryCode": "",
+              "line1": "PO Box 9",
+              "line2": "",
+              "line3": "",
+              "type": "Mailing"
+            },
+            {
+              "postalCode": 99755,
+              "city": "Denali Park",
+              "stateCode": "AK",
+              "countryCode": "US",
+              "provinceTerritoryCode": "",
+              "line1": "Mile 85, Denali Park Road",
+              "line2": "",
+              "line3": "",
+              "type": "Physical"
+            }
+          ],
+          "amenities": [
+            {
+              "trashrecyclingcollection": "Yes - seasonal",
+              "toilets": [
+                "Vault Toilets - year round"
+              ],
+              "internetconnectivity": false,
+              "showers": [
+                "None"
+              ],
+              "cellphonereception": false,
+              "laundry": false,
+              "amphitheater": "",
+              "dumpstation": false,
+              "campstore": false,
+              "stafforvolunteerhostonsite": "Yes - seasonal",
+              "potablewater": [
+                "Yes - seasonal"
+              ],
+              "iceavailableforsale": false,
+              "firewoodforsale": false,
+              "ampitheater": "Yes - year round",
+              "foodstoragelockers": "Yes - year round"
+            }
+          ],
+          "campsites": [
+            {
+              "other": 0,
+              "group": 0,
+              "horse": 0,
+              "totalsites": 28,
+              "tentonly": 28,
+              "electricalhookups": 0,
+              "rvonly": 0,
+              "walkboatto": 0
+            }
+          ],
+          "contacts": [
+            {
+              "phoneNumbers": [
+                {
+                  "phoneNumber": "9076839532",
+                  "description": "",
+                  "extension": "",
+                  "type": "Voice"
+                }
+              ]
+            },
+            {
+              "emailAddresses": [
+                {
+                  "emailAddress": "yell_visitor_services@nps.gov",
+                  "description": ""
+                }
+              ]
+            }
+          ],
+          "description": "Wonder Lake Campground is at mile 85 on the Denali Park Road. It offers 28 sites, which are all tent-only.\n\nIt is the closest campground to Denali. Though separated by nearly 26 miles, the sheer size of the mountain makes it loom impressively over Wonder Lake Campground. Cloudy skies can obscure views, and mosquitoes can be fierce, but Wonder Lake on a clear day offers views that will last a lifetime. Bear-proof food lockers are available throughout the campground.",
+          "directionsoverview": "Visitors may not drive to this campground. It is only accessible for campers via specialized park buses. Be sure to book a camper bus ticket in addition to paying your campground fees.",
+          "directionsUrl": "http://www.nps.gov/dena/planyourvisit/campground-wonder.htm",
+          "fees": null,
+          "geometryPoiId": "8793be28-0d54-493f-8556-877e7ecbe937",
+          "id": 29,
+          "images": null,
+          "latLong": "{lat:63.4574408, lng:-150.8612003}",
+          "latitude": "63.4574408",
+          "longitude": "-150.8612003",
+          "multimedia": [
+            {
+              "title": "The Worthington Farm",
+              "id": "4FD5B472-D6D9-43AA-9532-2AC5BF920883",
+              "type": "multimedia/videos",
+              "url": "https://www.nps.gov/media/video/view.htm?id=4FD5B472-D6D9-43AA-9532-2AC5BF920883"
+            }
+          ],
+          "name": "Wonder Lake",
+          "operatingHours": null,
+          "parkCode": "dena",
+          "regulationsoverview": null,
+          "regulationsurl": "http://www.nps.gov/dena/learn/management/lawsandpolicies.htm",
+          "relevanceScore": 1,
+          "reservationsdescription": "",
+          "reservationsitesfirstcome": "",
+          "reservationssitesreservable": "",
+          "reservationsurl": "",
+          "weatheroverview": "Wonder Lake tends to be cooler and wetter than the park entrance. Expect lows in the upper 30s or 40s each night. Daytime highs are typically in the upper 50s or 60s, though occasional sunny days can result in temps near 80. Mosquitoes are particularly bad most of the summer - bring a headnet!"
+        },
+        {
+          "accessibility": [
+            {
+              "wheelchairAccess": "Restrooms are wheelchair accessible.",
+              "internetinfo": "",
+              "rvallowed": 0,
+              "cellphoneinfo": "",
+              "firestovepolicy": "",
+              "rvmaxlength": 0,
+              "additionalinfo": "",
+              "trailermaxlength": 0,
+              "adainfo": "Surfaces in the campground are largely compacted gravel or native soils with roots and rocks. The path from the campground to the bus stop on the Denali Park Road is compacted gravel. Restrooms are wheelchair accessible.",
+              "rvinfo": "This is a tent-only campground.",
+              "accessroads": [
+                "Unpaved Roads - 4WD/High clearance required"
+              ],
+              "trailerallowed": 0,
+              "classifications": [
+                "Primitive Camping Areas"
+              ]
+            }
+          ],
+          "addresses": [
+            {
+              "postalCode": 99755,
+              "city": "Denali Park",
+              "stateCode": "AK",
+              "line1": "PO Box 9",
+              "line2": "",
+              "line3": "",
+              "type": "Mailing"
+            },
+            {
+              "postalCode": 99755,
+              "city": "Denali Park",
+              "stateCode": "AK",
+              "line1": "Mile 85, Denali Park Road",
+              "line2": "",
+              "line3": "",
+              "type": "Physical"
+            }
+          ],
+          "amenities": [
+            {
+              "trashrecyclingcollection": "Yes - seasonal",
+              "toilets": [
+                "Vault Toilets - year round"
+              ],
+              "internetconnectivity": false,
+              "showers": [
+                "None"
+              ],
+              "cellphonereception": false,
+              "laundry": false,
+              "amphitheater": "",
+              "dumpstation": false,
+              "campstore": false,
+              "stafforvolunteerhostonsite": "Yes - seasonal",
+              "potablewater": [
+                "Yes - seasonal"
+              ],
+              "iceavailableforsale": false,
+              "firewoodforsale": false,
+              "ampitheater": "Yes - year round",
+              "foodstoragelockers": "Yes - year round"
+            }
+          ],
+          "campsites": [
+            {
+              "other": 0,
+              "group": 0,
+              "horse": 0,
+              "totalsites": 7,
+              "tentonly": 7,
+              "electricalhookups": 0,
+              "rvonly": 0,
+              "walkboatto": 0
+            }
+          ],
+          "contacts": [
+            {
+              "phoneNumbers": [
+                {
+                  "phoneNumber": "9076839532",
+                  "description": "",
+                  "extension": "",
+                  "type": "Voice"
+                }
+              ]
+            },
+            {
+              "emailAddresses": [
+                {
+                  "emailAddress": "yell_visitor_services@nps.gov",
+                  "description": ""
+                }
+              ]
+            }
+          ],
+          "description": "Igloo Creek Campground is at mile 35 on the Park Road. It offers 7 sites, making it the smallest in Denali (along with Sanctuary River Campground, which also has 7 sites).\n\nIgloo is tent-only - you will not find any RVs or other vehicles in this campground. It is accessible by camper bus. The bus stop is a short walk from the camp sites - less than 50 yards (meters).\n\nAdvance reservations are not possible at this campground. Visitors may only book a site upon arriving in the park.",
+          "directionsoverview": "This campground can only be reached by bus. Be sure to book a camper bus ticket when purchasing a stay at Igloo Creek Campground.",
+          "directionsUrl": "http://www.nps.gov/dena/planyourvisit/campground-igloo.htm",
+          "fees": null,
+          "id": 34,
+          "images": null,
+          "latLong": "{lat:63.6117723, lng:-149.570902}",
+          "name": "Igloo Creek",
+          "operatingHours": null,
+          "parkCode": "dena",
+          "regulationsoverview": null,
+          "regulationsurl": "http://www.nps.gov/dena/learn/management/lawsandpolicies.htm",
+          "relevanceScore": 1,
+          "reservationsdescription": "",
+          "reservationsitesfirstcome": "",
+          "reservationssitesreservable": "",
+          "reservationsurl": "",
+          "weatheroverview": "We recommend you bring a sleeping bag rated to 20 degrees F. Expect rain, though sunny days do occur periodically throughout the summer. Highs are usually in the 60s, though sometimes can reach the low 80s. Snow is possible any month of the year, however."
+        }
+      ]
+    ],
+    "limit": "50",
+    "start": "0"
+  }
+]
+
+400	        Invalid status value
+
++-----------------------------------
+
+/events
+Retrieve events created by national parks and other NPS entities.
+
+Code	    Description
+200	        successful operation
+
+Example Response
+Model
+[
+  {
+    "total": "745",
+    "errors": [
+      {}
+    ],
+    "data": [
+      [
+        {
+          "category": "Regular Event",
+          "categoryid": "0",
+          "contactemailaddress": "example@nps.gov",
+          "contactname": "John Doe",
+          "contacttelephonenumber": "9999999999",
+          "createuser": "",
+          "date": "2019-09-14",
+          "dateend": "2017-09-16",
+          "dates": [
+            "2017-09-16",
+            "2018-09-15",
+            "2019-09-14"
+          ],
+          "datestart": "2017-09-16",
+          "datetimecreated": "",
+          "datetimeupdated": "",
+          "description": "<p>Join a National Park service Ranger for a paid guided tour.</p>",
+          "eventid": "0",
+          "feeinfo": "The event is not free; you should call the park.",
+          "geometryPoiId": "8793be28-0d54-493f-8556-877e7ecbe937",
+          "id": "FE39616A-1DD8-B71B-0BA9DCB9BDF76670",
+          "imageidlist": "",
+          "images": [
+            {
+              "altText": "Picture of the South-West Battery with a skyscraper in the background.",
+              "caption": "The South-West Battery",
+              "credit": "NPS Photo",
+              "imageId": "21803",
+              "ordinal": "0",
+              "path": "/common/uploads/event_calendar/1B853925-E059-D529-0C87BCF597BE816B.jpg",
+              "title": "The South-West Battery",
+              "url": "/common/uploads/event_calendar/1B853925-E059-D529-0C87BCF597BE816B.jpg"
+            }
+          ],
+          "infourl": "",
+          "isallday": false,
+          "isfree": false,
+          "isrecurring": true,
+          "isregresrequired": true,
+          "latitude": 40.7034,
+          "location": "Castle Clinton National Monument",
+          "longitude": -74.0168,
+          "organizationname": "",
+          "parkfullname": "Castle Clinton National Monument",
+          "portalname": "",
+          "recurrencedateend": "2023-11-20",
+          "recurrencedatestart": "2017-09-16",
+          "recurrencerule": "DTSTART=20171120T040000Z;UNTIL=20231120T040000Z;FREQ=DAILY;WKST=SU;COUNT=0;INTERVAL=1",
+          "regresinfo": "Please call the park to register for this event.",
+          "regresurl": "https://www.nps.gov/planyourvisit/event-details.htm?id=0D25A738-155D-451F-67D31ADD6827D16D",
+          "sitecode": "cacl",
+          "sitetype": "park",
+          "subjectname": "",
+          "tags": [
+            "NPS Centennial"
+          ],
+          "timeinfo": "",
+          "times": [
+            {
+              "timestart": "10:00 AM",
+              "timeend": "10:30 AM",
+              "sunsetend": false,
+              "sunrisestart": false
+            },
+            {
+              "timestart": "12:00 PM",
+              "timeend": "12:30 PM",
+              "sunsetend": false,
+              "sunrisestart": false
+            },
+            {
+              "timestart": "02:00 PM",
+              "timeend": "02:30 PM",
+              "sunsetend": false,
+              "sunrisestart": false
+            },
+            {
+              "timestart": "03:00 PM",
+              "timeend": "03:30 PM",
+              "sunsetend": false,
+              "sunrisestart": false
+            }
+          ],
+          "title": "Military Appreciation Day",
+          "types": [
+            "Other"
+          ]
+        },
+        {
+          "category": "Regular Event",
+          "categoryid": "0",
+          "contactemailaddress": "",
+          "contactname": "",
+          "contacttelephonenumber": "",
+          "createuser": "",
+          "date": "2018-10-29",
+          "dateend": "2018-10-31",
+          "dates": [
+            "2018-10-29",
+            "2018-10-30",
+            "2018-10-31"
+          ],
+          "datestart": "2018-10-31",
+          "datetimecreated": "",
+          "datetimeupdated": "",
+          "description": "<p>Join a National Park service Ranger for a free guided tour.</p>",
+          "eventid": "0",
+          "feeinfo": "",
+          "id": "0D25A738-155D-451F-67D31ADD6827D16D",
+          "imageidlist": "",
+          "images": [
+            {
+              "altText": "",
+              "caption": "",
+              "credit": "",
+              "imageId": "",
+              "ordinal": "",
+              "path": "",
+              "title": "",
+              "url": ""
+            }
+          ],
+          "infourl": "",
+          "isallday": false,
+          "isfree": true,
+          "isrecurring": true,
+          "isregresrequired": false,
+          "latitude": null,
+          "location": "Castle Clinton NM",
+          "longitude": null,
+          "organizationname": "",
+          "parkfullname": "Castle Clinton National Monument",
+          "portalname": "",
+          "recurrencedateend": "2023-11-20",
+          "recurrencedatestart": "2018-10-31",
+          "recurrencerule": "DTSTART=20171120T040000Z;UNTIL=20231120T040000Z;FREQ=DAILY;WKST=SU;COUNT=0;INTERVAL=1",
+          "regresinfo": "",
+          "regresurl": "",
+          "sitecode": "cacl",
+          "sitetype": "park",
+          "subjectname": "",
+          "tags": [
+            "NPS Centennial"
+          ],
+          "timeinfo": "",
+          "times": [
+            {
+              "timestart": "10:00 AM",
+              "timeend": "10:30 AM",
+              "sunsetend": false,
+              "sunrisestart": false
+            },
+            {
+              "timestart": "12:00 PM",
+              "timeend": "12:30 PM",
+              "sunsetend": false,
+              "sunrisestart": false
+            },
+            {
+              "timestart": "02:00 PM",
+              "timeend": "02:30 PM",
+              "sunsetend": false,
+              "sunrisestart": false
+            },
+            {
+              "timestart": "03:00 PM",
+              "timeend": "03:30 PM",
+              "sunsetend": false,
+              "sunrisestart": false
+            }
+          ],
+          "title": "Castle Clinton Guided tour",
+          "types": [
+            "Other"
+          ]
+        }
+      ]
+    ],
+    "dates": "2020-01-01,2019-12-04,2019-12-11",
+    "pagenumber": "1",
+    "pagesize": "50"
+  }
+]
+
+400	        Invalid status value
+
++-----------------------------------
+
+/parks
+Retrieve data about national parks (addresses, contacts, description, hours of operation, etc.).
+
+Code	    Description
+200	        successful operation
+
+Example Response
+Model
+[
+  {
+    "total": "496",
+    "data": [
+      {
+        "activities": [
+          {
+            "id": "B33DC9B6-0B7D-4322-BAD7-A13A34C584A3",
+            "name": "Guided Tours"
+          }
+        ],
+        "addresses": [
+          {
+            "line1": "2 Officers Row",
+            "line2": "Yellowstone National Park Headquarters",
+            "line3": "",
+            "city": "Yellowstone National Park",
+            "stateCode": "WY",
+            "countryCode": "US",
+            "provinceTerritoryCode": "",
+            "postalCode": "82190",
+            "type": "Physical"
+          },
+          {
+            "line1": "P.O. Box 168",
+            "line2": "",
+            "line3": "",
+            "city": "Yellowstone National Park",
+            "stateCode": "WY",
+            "countryCode": "US",
+            "provinceTerritoryCode": "",
+            "postalCode": "82190-0168",
+            "type": "Mailing"
+          }
+        ],
+        "contacts": [
+          {
+            "phoneNumbers": [
+              {
+                "phoneNumber": "3073447381",
+                "description": "",
+                "extension": "",
+                "type": "Voice"
+              },
+              {
+                "phoneNumber": "3073442014",
+                "description": "",
+                "extension": "",
+                "type": "Fax"
+              },
+              {
+                "phoneNumber": "3073442386",
+                "description": "",
+                "extension": "",
+                "type": "TTY"
+              }
+            ],
+            "emailAddresses": [
+              {
+                "emailAddress": "yell_visitor_services@nps.gov",
+                "description": ""
+              }
+            ]
+          }
+        ],
+        "description": "Visit Yellowstone and experience the world's first national park. Marvel at a volcano's hidden power rising up in colorful hot springs, mudpots, and geysers. Explore mountains, forests, and lakes to watch wildlife and witness the drama of the natural world unfold. Discover the history that led to the conservation of our national treasures 'for the benefit and enjoyment of the people.'",
+        "designation": "National Park",
+        "directionsInfo": "Yellowstone National Park covers nearly 3,500 square miles in the northwest corner of Wyoming (3% of the park is in Montana and 1% is in Idaho). Yellowstone has five entrance stations, and several are closed to regular vehicles during winter. It takes many hours to drive between these entrances, so be sure to check the status of roads at the entrance you intend to use while planning your trip and before you arrive.",
+        "directionsUrl": "https://www.nps.gov/yell/planyourvisit/directions.htm",
+        "entranceFees": [
+          {
+            "cost": 30,
+            "description": "7-day pass for Yellowstone National Park",
+            "title": "Yellowstone (private, non-commercial vehicle)"
+          },
+          {
+            "cost": 25,
+            "description": "7-day pass for Yellowstone National Park. Snowmobile entry limited to guided tours or permit holders.",
+            "title": "Yellowstone (motorcycle or snowmobile)"
+          }
+        ],
+        "entrancePasses": [
+          {
+            "cost": 60,
+            "description": "Annual pass providing free entrance to Yellowstone National Park for one year; valid through the month of purchase. Winter use: On a snowmobile, admits the signers and children (residing in the same household under the age of 21). In a snowcoach or shuttle, it admits the signers and up to three additional persons (16 and older) for a total of four people.",
+            "title": "Yellowstone National Park Annual Pass"
+          }
+        ],
+        "fullName": "Yellowstone National Park",
+        "id": "F58C6D24-8D10-4573-9826-65D42B8B83AD",
+        "images": [
+          {
+            "credit": "NPS/Jim Peaco",
+            "altText": "Crowd watching Aurum Geyser erupt",
+            "title": "Aurum Geyser",
+            "id": 1789,
+            "caption": "Aurum Geyser Erupting",
+            "url": "https://www.nps.gov/common/uploads/structured_data/3C7D2FBB-1DD8-B71B-0BED99731011CFCE.jpg"
+          },
+          {
+            "credit": "NPS/Neal Herbert",
+            "altText": "Photo of bison in Lamar Valley",
+            "title": "Bison in Lamar Valley",
+            "id": 1792,
+            "caption": "Bison in Lamar Valley",
+            "url": "https://www.nps.gov/common/uploads/structured_data/3C7D34E6-1DD8-B71B-0BBB1C0F478318E2.jpg"
+          }
+        ],
+        "latLong": "lat:44.59824417, long:-110.5471695",
+        "name": "Yellowstone",
+        "operatingHours": [
+          {
+            "name": "All Park Hours",
+            "description": "Yellowstone is open daily, year-round, although activities and services are limited at night and certain times of year. The park has five entrance stations, but not all entrance stations are open year-round. Make sure to carefully read about access at each station at different times of year. And remember, all dates are weather dependent!\n\nPlease note that camping is possible only in designated campgrounds.",
+            "standardHours": [
+              {
+                "sunday": "All Day",
+                "monday": "All Day",
+                "tuesday": "All Day",
+                "wednesday": "All Day",
+                "thursday": "All Day",
+                "friday": "All Day",
+                "saturday": "All Day"
+              }
+            ],
+            "exceptions": [
+              {
+                "name": "Thanksgiving Day",
+                "startDate": "{ts '2015-11-26 00:00:00'}",
+                "endDate": "{ts '2015-11-26 00:00:00'}",
+                "exceptionHours": [
+                  {
+                    "sunday": "Closed",
+                    "monday": "Closed",
+                    "tuesday": "Closed",
+                    "wednesday": "Closed",
+                    "thursday": "Closed",
+                    "friday": "Closed",
+                    "saturday": "Closed"
+                  }
+                ]
+              },
+              {
+                "name": "Christmas Day",
+                "startDate": "{ts '2015-12-25 00:00:00'}",
+                "endDate": "{ts '2015-12-25 00:00:00'}",
+                "exceptionHours": [
+                  {
+                    "sunday": "Closed",
+                    "monday": "Closed",
+                    "tuesday": "Closed",
+                    "wednesday": "Closed",
+                    "thursday": "Closed",
+                    "friday": "Closed",
+                    "saturday": "Closed"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "West Entrance",
+            "description": "Adjacent to the town of West Yellowstone, MT, the West Entrance is usually open (weather dependent) to wheeled vehicles from the third Friday in April through early November, and to tracked-oversnow (snowmobiles and snowcoaches) vehicles from December 15 to March 15.",
+            "standardHours": [
+              {
+                "sunday": "Closed",
+                "monday": "Closed",
+                "tuesday": "Closed",
+                "wednesday": "Closed",
+                "thursday": "Closed",
+                "friday": "Closed",
+                "saturday": "Closed"
+              }
+            ],
+            "exceptions": null
+          }
+        ],
+        "parkCode": "yell",
+        "relevanceScore": 1,
+        "states": "ID,MT,WY",
+        "topics": [
+          {
+            "id": "B912363F-771C-4098-BA3A-938DF38A9D7E",
+            "name": "Aviation"
+          }
+        ],
+        "url": "https://www.nps.gov/yell/index.htm",
+        "weatherInfo": "Yellowstone's weather can vary quite a bit, even in a single day. In the summer, daytime highs can exceed 70F (25C), only to drop 20 or more degrees when a thunderstorm rolls through. It can snow during any month of the year, and winter lows frequently drop below zero, especially at night. Bring a range of clothing options, including a warm jacket and rain gear, even in the summer."
+      }
+    ],
+    "limit": "50",
+    "start": "0"
+  }
+]
+400	        Invalid status value
+
++-----------------------------------
+
+/places
+Retrieve articles providing a synopsis of specific places related to national parks.
+
+Code	    Description
+200	        successful operation
+
+Example Response
+Model
+[
+  {
+    "total": "950",
+    "data": [
+      [
+        {
+          "latLong": "63.71951367351548,-148.96849470706263",
+          "longitude": "-148.96849470706263",
+          "geometryPoiId": "8793be28-0d54-493f-8556-877e7ecbe937",
+          "relatedParks": [
+            {
+              "states": "AK",
+              "fullName": "Denali National Park & Preserve",
+              "url": "https://www.nps.gov/dena/index.htm",
+              "parkCode": "dena",
+              "designation": "National Park & Preserve",
+              "name": "Denali"
+            }
+          ],
+          "url": "https://www.nps.gov/places/sled-dog-kennels.htm",
+          "images": [],
+          "imageTitle": "",
+          "imageCaption": "",
+          "imageId": "",
+          "npmapId": "",
+          "tags": [],
+          "amenities": [
+            "Accessibility - Accessible Restroom",
+            "Accessibility- Assistive Listening Systems",
+            "Accessibility - Tactile Exhibit",
+            "Accessibility - Wheelchair Accessible",
+            "Amphitheatre",
+            "Benches/Seating",
+            "Bus/Shuttle Stop",
+            "Cellular Signal",
+            "First Aid Kit Available",
+            "Historical/Interpretive Information/Exhibits",
+            "Information",
+            "Information Kiosk/Bulletin Board",
+            "Information - Ranger/Staff Member Present",
+            "Information - Maps Available",
+            "Kennel",
+            "Parking - Auto",
+            "Restroom",
+            "Toilet - Vault/Composting"
+          ],
+          "id": "BCCAC67C-519B-49B9-BBB1-6DF3BFE3FF31",
+          "quickFacts": {
+            "tagbased": [],
+            "userdefined": [
+              {
+                "data": []
+              }
+            ],
+            "standard": [
+              {
+                "data": [
+                  {
+                    "id": "5C252B96-2DEB-4EF4-91D1-B5D2B202FCD7",
+                    "value": "Mile 3.4, Denali Park Road",
+                    "name": "Location: "
+                  },
+                  {
+                    "id": "208F1B3C-44DC-4CF5-9A61-9B26A364D701",
+                    "value": "The only working sled dog kennels in the National Park System",
+                    "name": "Significance: "
+                  }
+                ]
+              }
+            ]
+          },
+          "imageCredit": "",
+          "imageUrl": "",
+          "relatedOrganizations": [],
+          "audioDescription": "In the center is the historic kennels building. It is a brown, wooden, two story building. There are two entrances to the building on the front side. The door to the west has the words Sled Room above it. On the western side of the building is the dog yard where about 30 dogs live. A gravel path leads visitors through the yard. To the north side are two rows of dog houses made out of wood logs. Each dog is tethered to their housing area. On the south side of the dog yard is a row of pens made of wire fencing. There is one dog in each pen and they also each have a log dog house. The dogs can be on their log house, in it, or next to it. The dogs are all different colors, mixes of brown, white, black, and gray. On the eastern side of the kennels building are the stands for the sled dog demonstration. Steps lead up to different rows where people can stand and watch the presentation. In the first row of most of the sections there is bench seating. In the demonstration area, there is a rectangular gravel pit with a pair of antlers, pile of wood, and sound equipment to be used as props in the demonstration.",
+          "managedByUrl": "",
+          "isOpenToPublic": "1",
+          "imageAltText": "",
+          "isManagedByNps": "1",
+          "listingDescription": "Explore the only working sled dog kennels in the National Park System.",
+          "managedByOrg": "",
+          "title": "Sled Dog Kennels",
+          "latitude": "63.71951367351548",
+          "bodyText": "Located about 3 miles inside the park at Park Headquarters, the sled dog kennels are open year-round for visitors to meet some of the 30 dogs who live and work in Denali.<br />\n<br />\nDuring the summer, sled dog demonstrations are offered daily. Rangers and dogs work together to demonstrate a traditional Alaskan mode of travel. These unique, 30 minute programs include an opportunity to tour the park kennels and visit Denali's Alaskan huskies. Demonstrations are given three times daily in peak season (June 1 through September 1), at 10 am, 2 pm and 4 pm. Ask at the visitor center for demonstration times outside of peak season (May and September).<br />\n<br />\nIn winter, the dogs and rangers are frequently busy working deep in the park rather than at the kennels, so you may wish to inquire at the visitor center before coming to see if the dogs are around.<br />\n<br />\nWelcoming visitors to the dog yard, the historic kennels building is the oldest building in the park that is still used for its original purpose. Step inside the Sled Room to learn about the history of mushing in Alaska and in the park. Sled dogs and rangers continue to work together to protect the wilderness of the park as they have since the 1920s.",
+          "multimedia": [
+            {
+              "title": "The Worthington Farm",
+              "id": "4FD5B472-D6D9-43AA-9532-2AC5BF920883",
+              "type": "multimedia/videos",
+              "url": "https://www.nps.gov/media/video/view.htm?id=4FD5B472-D6D9-43AA-9532-2AC5BF920883"
+            }
+          ]
+        }
+      ]
+    ],
+    "limit": "50",
+    "start": "0"
+  }
+]
+
+400	        Invalid status value
+
++-----------------------------------
+
+/thingstodo
+Retrieve suggested things to do recommended by and for specific national parks.
+
+Code	    Description
+200	        successful operation
+
+Example Response
+Model
+[
+  {
+    "total": "638",
+    "data": [
+      [
+        {
+          "location": "Northeast Area",
+          "seasonDescription": "",
+          "accessibilityInformation": "<p>This skier-tracked easy trail follows a fairly flat old road after crossing a narrow bridge over Soda Butte Creek at the trailhead. The trail elevation gain/loss is 132 feet. Service dogs allowed with backcountry access permit.</p>",
+          "longitude": "",
+          "geometryPoiId": "8793be28-0d54-493f-8556-877e7ecbe937",
+          "relatedParks": [
+            {
+              "states": "ID,MT,WY",
+              "fullName": "Yellowstone National Park",
+              "url": "https://www.nps.gov/yell/index.htm",
+              "parkCode": "yell",
+              "designation": "National Park",
+              "name": "Yellowstone"
+            }
+          ],
+          "isReservationRequired": "false",
+          "ageDescription": "",
+          "url": "https://www.nps.gov/thingstodo/yell-bannock-ski-trail.htm",
+          "petsDescription": "Qualified service animals are welcome throughout the park and in all park facilities. However, they must be leashed and under your control at all times. This trail requires a backcountry access pass for service animals.<br />\n<br />\n<br />\n ",
+          "timeOfDayDescription": "",
+          "images": [
+            {
+              "credit": "",
+              "crops": [
+                {
+                  "aspectratio": "3",
+                  "url": "https://www.nps.gov/common/uploads/cropped_image/primary/20970C88-BB81-37F7-5FB606A6D4A87D9B.jpeg"
+                },
+                {
+                  "aspectratio": "1",
+                  "url": "https://www.nps.gov/common/uploads/cropped_image/secondary/20970C88-BB81-37F7-5FB606A6D4A87D9B.jpeg"
+                }
+              ],
+              "altText": "The Bannock Trail is a mostly flat through mature forest.",
+              "title": "",
+              "caption": "",
+              "url": "https://www.nps.gov/common/uploads/cropped_image/20970C88-BB81-37F7-5FB606A6D4A87D9B.jpeg"
+            }
+          ],
+          "feeDescription": "",
+          "id": "8B175753-D37B-4DD5-BF96-00383F7BB46C",
+          "age": "",
+          "relatedOrganizations": [],
+          "arePetsPermittedWithRestrictions": "false",
+          "activities": [
+            {
+              "id": "F9B1D433-6B86-4804-AED7-B50A519A3B7C",
+              "name": "Skiing"
+            }
+          ],
+          "activityDescription": "Easiest",
+          "locationDescription": "The trail begins at Warm Creek picnic area and ends in Silver Gate, Montana.",
+          "doFeesApply": "false",
+          "longDescription": "<p>The Bannock Ski Trail is a 2 mile (3.2 km) easy ski that follows the old road bed that once used to supply the mining town of Cooke City, Montana. Begin at Warm Creek picnic area, one mile west of the Northeast Entrance. This trail takes its name from the Bannock band of the Shoshone, who used this route to reach the buffalo grounds of the Great Plains. After crossing Soda Butte Creek, the terrain is mostly flat and the trail traverses open meadows and mixed conifer forests. You will reach the North Absaroka Wilderness approximately one mile (1.6 km) from the trailhead. At two miles (3.2 km) you come to Silver Gate, Montana. From here the road bed is used as a snowmobile route and is good skiing to Cooke City, 3 miles (4.8 km) to the east.</p>\n\n<p><b>Notes:</b> Bison and elk frequent this trail. Federal regulations require you to stay at least 100 yards (91 m) away from bears and wolves, and at least 25 yards (23 m) away from bison and all other wild animals.</p>\n\n<p>Check out the<a href=\"/thingstodo/yell-bannock-ski-trail.htm#Details\" id=\"CP___PAGEID=5744528,yell-bannock-ski-trail.htm#Details,30639|\"> ski trail details and accessibility information</a> at the bottom of this page.</p>",
+          "reservationDescription": "",
+          "season": [
+            "Winter"
+          ],
+          "topics": [
+            {
+              "id": "5BE55D7F-BDB6-4E3D-AC35-2D8EBB974417",
+              "name": "Trails"
+            }
+          ],
+          "durationDescription": "The duration will vary depending on fitness level, snow conditions, and length of time spent along the trail.",
+          "arePetsPermitted": "false",
+          "timeOfDay": [
+            "Day"
+          ],
+          "title": "Bannock Ski Trail",
+          "latitude": "",
+          "shortDescription": "The Bannock Ski Trail is a 2 mile (3.2 km) easy ski that follows the old road bed that once used to supply the mining town of Cooke City, Montana.",
+          "duration": "1-2 Hours",
+          "relevanceScore": 1,
+          "tags": [
+            "Yellowstone National Park",
+            "Yellowstone National Park ski trail",
+            "ski trail",
+            "snowshoe trail",
+            "snowshoeing",
+            "cross country skiing",
+            "Northeast Area",
+            "easy ski",
+            "forested trail",
+            "mountains",
+            "recreation",
+            "winter recreation"
+          ]
+        }
+      ]
+    ],
+    "limit": "50",
+    "start": "0"
+  }
+]
+
+400	        Invalid status data
+
++-----------------------------------
+
+/tours
+Retrieve tours with stops at the special places, campgrounds, and visitor centers found within national parks.
+
+Code	    Description
+200	        successful operation
+
+Example Response
+Model
+[
+  {
+    "total": "2",
+    "data": [
+      {
+        "topics": [
+          {
+            "id": "77B7EFDF-1A74-409C-8BA2-324EC919DB0E",
+            "name": "Arctic"
+          }
+        ],
+        "description": "A tour that exists purely to ensure tours show up in the API successfully.",
+        "images": [
+          {
+            "credit": "NPS Photo / Emily Mesner",
+            "crops": [
+              {
+                "aspectratio": "1.00",
+                "url": "https://www.nps.gov/common/uploads/tours/primary/6B230275-0DCB-8052-19039607F9A25672.jpg"
+              }
+            ],
+            "altText": "a brown bear",
+            "title": "Title!",
+            "caption": "Grizzlies can sometimes be seen in the Savage River area of Denali",
+            "url": "https://www.nps.gov/common/uploads/tours/6B230275-0DCB-8052-19039607F9A25672.jpg"
+          }
+        ],
+        "durationMax": "120",
+        "stops": [
+          {
+            "significance": "string",
+            "assetId": "CD74CF08-6C88-418B-A2C2-F7B957975C76",
+            "assetName": "Savage River",
+            "assetType": "Place",
+            "id": "6886BB60-C11B-1A87-589FEABEE387E9E4",
+            "ordinal": "1",
+            "directionsToNextStop": "string"
+          }
+        ],
+        "activities": [
+          {
+            "id": "BFF8C027-7C8F-480B-A5F8-CD8CE490BFBA",
+            "name": "Hiking"
+          }
+        ],
+        "durationUnit": "m",
+        "title": "API Test",
+        "id": "6880801D-EDC4-00AF-FBD5EAFFB3B7FD32",
+        "durationMin": "60",
+        "relevanceScore": 1,
+        "tags": [
+          {}
+        ],
+        "park": {
+          "states": "AK",
+          "designation": "National Park & Preserve",
+          "parkCode": "dena",
+          "fullName": "Denali National Park & Preserve",
+          "url": "https://www.nps.gov/dena/index.htm",
+          "name": "Denali"
+        }
+      }
+    ],
+    "limit": "50",
+    "start": "0"
+  }
+]
+
+400	        Invalid status value
+
++-----------------------------------
+
+/images
