@@ -1,13 +1,27 @@
 {{!-- {{>message}} --}} 
 
-<form class="mx-5 mt-3" action="/login" method="post">
-    <div>
-        <p>Username</p>
-        <input class="form-control w-25" type="text" name="username" id="username">
-        <p>Password</p>
-        <input class="form-control w-25" type="password" name="password" id="password">
+<form
+      class="mx-5 mt-3 d-flex justify-content-center align-items-center vh-100"
+      action="/login"
+      method="post"
+    >
+      <div class="border p-5">
+        <label for="username">Username</label>
+        <input
+          class="form-control"
+          type="text"
+          name="username"
+          id="username"
+        />
+        <label class="mt-3" for="password">Password</label>
+        <input
+          class="form-control mt-0"
+          type="password"
+          name="password"
+          id="password"
+        />
         <button class="btn btn-primary mt-3" type="submit">Login</button>
 
-        <p>Don't have an account? <a href="/register">Register</a></p>
-    </div>
-</form>
+        <p class="mt-3">Don't have an account? <a href="/register">Register</a></p>
+      </div>
+    </form>
