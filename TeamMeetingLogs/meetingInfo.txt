@@ -2,3 +2,23 @@ The minutes of the meeting with your TA every week will be recorded in a file he
 - Decisions made
 - Alternative actions/options discussed
 - Follow-up items, including agreed-on roles and responsibilities
+
++-----------------------------------
+
+03/22
+
+Time: 5:15pm-5:25pm
+
+Agenda:
+- gave Nikhil an overview of the project and an update of what we're currently working on
+- talked about to-do and in-progress user stories in github project
+
+Nikhil Notes:
+- setting trip that user creates (with link?)
+- carbon emission calculator (cool possible feature)
+- overall project looks good and thought out
+
+By next meeting:
+- more code and commits, but not much needed (spring break)
+
++-----------------------------------
