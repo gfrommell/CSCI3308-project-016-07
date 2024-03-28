@@ -133,7 +133,7 @@ DROP TABLE IF EXISTS tours_to_activities;
 CREATE TABLE tours_to_activites(
     tour_id VARCHAR(50) REFERENCES tours (tour_id) ON DELETE CASCADE,
     activity_id VARCHAR(50) REFERENCES activities (activity_id) ON DELETE CASCADE
-)
+);
 
 DROP TABLE IF EXISTS days_to_events;
 CREATE TABLE days_to_events(
