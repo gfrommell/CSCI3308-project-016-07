@@ -1,3 +1,4 @@
+/*
 --DROP TABLE IF EXISTS users;
 CREATE TABLE users(
     username VARCHAR(50) PRIMARY KEY,
@@ -12,6 +13,7 @@ CREATE TABLE trips(
     number_of_days INTEGER,
     username VARCHAR(50) REFERENCES users (username) ON DELETE CASCADE
 );
+
 
 --DROP TABLE IF EXISTS parks;
 CREATE TABLE parks(
@@ -83,6 +85,7 @@ CREATE TABLE events(
     event_location VARCHAR(50)
 );
 
+
 --DROP TABLE IF EXISTS parks_to_things;
 CREATE TABLE parks_to_things(
     park_code VARCHAR(4) REFERENCES parks (park_code) ON DELETE CASCADE,
@@ -90,7 +93,7 @@ CREATE TABLE parks_to_things(
 );
 
 --DROP TABLE IF EXISTS things_to_activities;
-CREATE TABLE things_to_activites(
+CREATE TABLE activities_to_things(
     thing_id VARCHAR(50) REFERENCES things_to_do (thing_id) ON DELETE CASCADE,
     activity_id VARCHAR(50) REFERENCES activities (activity_id) ON DELETE CASCADE
 );
@@ -114,25 +117,25 @@ CREATE TABLE images_to_parks(
 );
 
 --DROP TABLE IF EXISTS campgrounds_to_images;
-CREATE TABLE campgrounds_to_images(
+CREATE TABLE images_to_campgrounds(
     campground_id VARCHAR(50) REFERENCES campgrounds (campground_id) ON DELETE CASCADE,
     image_url VARCHAR(200) REFERENCES images (image_url) ON DELETE CASCADE
 );
 
 --DROP TABLE IF EXISTS events_to_images;
-CREATE TABLE events_to_images(
+CREATE TABLE images_to_events(
     image_url VARCHAR(200) REFERENCES images (image_url) ON DELETE CASCADE,
     event_id VARCHAR(50) REFERENCES events (event_id) ON DELETE CASCADE
 );
 
 --DROP TABLE IF EXISTS tours_to_images;
-CREATE TABLE tours_to_images(
+CREATE TABLE images_to_tours(
     tour_id VARCHAR(50) REFERENCES tours (tour_id) ON DELETE CASCADE,
     image_url VARCHAR(200) REFERENCES images (image_url) ON DELETE CASCADE
 );
 
 --DROP TABLE IF EXISTS tours_to_activities;
-CREATE TABLE tours_to_activites(
+CREATE TABLE activities_to_tours(
     tour_id VARCHAR(50) REFERENCES tours (tour_id) ON DELETE CASCADE,
     activity_id VARCHAR(50) REFERENCES activities (activity_id) ON DELETE CASCADE
 );
@@ -155,6 +158,5 @@ CREATE TABLE days_to_tours(
     tour_id VARCHAR(50) REFERENCES tours (tour_id) ON DELETE CASCADE
 );
 
-
-
+*/
 
