@@ -78,6 +78,84 @@ const user = {
   email: undefined
 }
 
+app.get('/', (req, res) => {
+  res.redirect('/login'); //this will call the /anotherRoute route in the API
+});
+
+app.get('/register', (req, res) => {
+  res.render('pages/register');
+});
+
+app.get('/login', (req, res) =>{
+  res.render('pages/login');
+});
+
+// Register
+app.post('/register', async (req, res) => {
+  //hash the password using bcrypt library
+  const hash = await bcrypt.hash(req.body.password, 10);
+  
+  // To-DO: Insert username and hashed password into the 'users' table
+  const username = req.body.username;
+  const email = req.body.email;
+  
+  const query = `INSERT INTO users (username, password, email) VALUES ($1, $2, $3);`;
+  db.any(query, [username, hash, email])
+  .then(data =>{
+    res.redirect('/login')
+  })
+  .catch((err) =>{
+    res.redirect('/register')
+  });
+});
+
+app.post('/login', (req,res)=> {
+  const username = req.body.username;
+  // const password = req.body.password;
+  
+  const query =  `SELECT username, password, email from users WHERE username = $1;`;
+  
+  db.one(query, [username])
+  .then( async (data) =>{
+    const match = await bcrypt.compare(req.body.password, data.password);
+    
+    if(match){ // login successesful
+      user.username = req.body.username; // save data to the user object 
+      user.password = req.body.password;
+      user.email = req.body.email;
+    
+      req.session.user = user;
+      req.session.save();
+      res.redirect("/discover")
+    }
+    else{
+      res.render('pages/login',{
+        error:true,
+        message: "Incorrect username or password"
+      })
+    }
+  })
+  
+  .catch(err =>{
+    
+    res.redirect('/register')
+    
+  })
+  
+  
+});
+
+// Authentication Middleware.
+const auth = (req, res, next) => {
+  if (!req.session.user) {
+    // Default to login page.
+    return res.redirect('/login');
+  }
+  next();
+};
+
+// Authentication Required
+app.use(auth);
 
 // *****************************************************
 // <!-- Section 5 : Start Server-->
