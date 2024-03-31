@@ -106,6 +106,7 @@ app.post('/register', async (req, res) => {
   })
   .catch((err) =>{
     res.redirect('/register')
+    console.log("error")
   });
 });
 
@@ -126,7 +127,7 @@ app.post('/login', (req,res)=> {
     
       req.session.user = user;
       req.session.save();
-      res.redirect("/discover")
+      // res.redirect("/discover") //TODO: redirect to home page when it is created
     }
     else{
       res.render('pages/login',{
