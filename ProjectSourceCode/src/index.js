@@ -121,9 +121,9 @@ app.post('/login', (req,res)=> {
     const match = await bcrypt.compare(req.body.password, data.password);
     
     if(match){ // login successesful
-      user.username = req.body.username; // save data to the user object 
-      user.password = req.body.password;
-      user.email = req.body.email;
+      user.username = data.username; // save data to the user object 
+      user.password = data.password;
+      user.email = data.email;
     
       req.session.user = user;
       req.session.save();
