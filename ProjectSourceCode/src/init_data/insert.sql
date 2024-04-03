@@ -9,10 +9,11 @@ CREATE TABLE users(
 
 --DROP TABLE IF EXISTS trips;
 CREATE TABLE trips(
-    trip_id INTEGER PRIMARY KEY,
-    start_date VARCHAR(50),
+    trip_id SERIAL PRIMARY KEY,
+    start_date date,
     number_of_days INTEGER,
-    username VARCHAR(50) REFERENCES users (username) ON DELETE CASCADE
+    username VARCHAR(50) REFERENCES users (username) ON DELETE CASCADE,
+    trip_progress text
 );
 
 --DROP TABLE IF EXISTS days;
@@ -102,6 +103,11 @@ CREATE TABLE days_to_tours(
 );
 
 --DROP TABLE IF EXISTS days_to_tours;
+CREATE TABLE days_to_tours(
+    trip_id INTEGER REFERENCES trips (trip_id) ON DELETE CASCADE,
+    username VARCHAR(50) REFERENCES users (username) ON DELETE CASCADE
+);
+
 
 --https://www.postgresql.org/docs/9.3/functions-json.html For doing SQL methods with json data
 
@@ -194,5 +200,7 @@ CREATE TABLE days_to_tours(
         )
     INSERT INTO images_to_campgrounds
     SELECT image_id, campImages.campground_id FROM images INNER JOIN campImages ON images.url = campImages.url;
+
+
 
 
