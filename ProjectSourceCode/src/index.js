@@ -86,6 +86,11 @@ app.get('/register', (req, res) => {
   res.render('pages/register');
 });
 
+app.get('/exploreParks', (req, res) => {
+  res.render('pages/exploreParks');
+});
+
+
 
 app.get('/home', (req, res) => {
   res.render('pages/home');
