@@ -90,6 +90,11 @@ app.get('/exploreParks', (req, res) => {
   res.render('pages/exploreParks');
 });
 
+app.get('/createTrip', (req, res) => {
+  res.render('pages/createTrip');
+});
+
+
 
 
 app.get('/home', (req, res) => {
