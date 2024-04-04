@@ -132,7 +132,7 @@ app.post('/login', (req,res)=> {
     
       req.session.user = user;
       req.session.save();
-      // res.redirect("/discover") //TODO: redirect to home page when it is created
+      res.redirect("/home") //TODO: redirect to home page when it is created
     }
     else{
       res.render('pages/login',{
