@@ -103,7 +103,7 @@ CREATE TABLE days_to_tours(
 );
 
 --DROP TABLE IF EXISTS days_to_tours;
-CREATE TABLE days_to_tours(
+CREATE TABLE days_to_trips(
     trip_id INTEGER REFERENCES trips (trip_id) ON DELETE CASCADE,
     username VARCHAR(50) REFERENCES users (username) ON DELETE CASCADE
 );
