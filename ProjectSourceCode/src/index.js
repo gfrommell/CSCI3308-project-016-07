@@ -78,6 +78,8 @@ const user = {
   email: undefined
 }
 
+
+
 app.get('/', (req, res) => {
   res.redirect('/login'); //this will call the /anotherRoute route in the API
 });
