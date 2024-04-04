@@ -104,10 +104,11 @@ app.post('/register', async (req, res) => {
   const query = `INSERT INTO users (username, password, email) VALUES ($1, $2, $3);`;
   db.any(query, [username, hash, email])
   .then(data =>{
-    res.status(201);
+    res.status(200);
     res.redirect('/login')
   })
   .catch((err) =>{
+    res.status(400);
     res.redirect('/register')
     console.log("error")
   });
