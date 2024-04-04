@@ -170,6 +170,11 @@ const auth = (req, res, next) => {
   next();
 };
 
+app.get('/logout', (req, res) => {
+  req.session.destroy();
+  res.render('pages/logout');
+});
+
 // Authentication Required
 app.use(auth);
 
