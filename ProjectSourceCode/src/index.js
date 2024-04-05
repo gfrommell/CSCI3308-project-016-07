@@ -88,6 +88,21 @@ app.get('/register', (req, res) => {
   res.render('pages/register');
 });
 
+app.get('/exploreParks', (req, res) => {
+  res.render('pages/exploreParks');
+});
+
+app.get('/createTrip', (req, res) => {
+  res.render('pages/createTrip');
+});
+
+
+
+
+app.get('/home', (req, res) => {
+  res.render('pages/home');
+});
+
 app.get('/login', (req, res) =>{
   res.render('pages/login');
 });
@@ -131,7 +146,7 @@ app.post('/login', (req,res)=> {
     
       req.session.user = user;
       req.session.save();
-      // res.redirect("/discover") //TODO: redirect to home page when it is created
+      res.redirect("/home") //TODO: redirect to home page when it is created
     }
     else{
       res.render('pages/login',{
@@ -158,6 +173,11 @@ const auth = (req, res, next) => {
   }
   next();
 };
+
+app.get('/logout', (req, res) => {
+  req.session.destroy();
+  res.render('pages/logout');
+});
 
 // Authentication Required
 app.use(auth);
