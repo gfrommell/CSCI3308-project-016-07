@@ -44,14 +44,14 @@ describe("Testing Add User API", () => {
     chai
       .request(server)
       .post('/register')
-      .send({username: 'John Doe', password: "123", email: 'john@gmail.com'})
+      .send({username: "john doe", password: "123", email: 'john@gmail.com'})
       .end((err, res) => {
         expect(res).to.have.status(200);
         // expect(res.body.message).to.equals('Success');
         done();
       });
   });
-});
+})
 
  // Example Negative Testcase :
   // API: /add_user

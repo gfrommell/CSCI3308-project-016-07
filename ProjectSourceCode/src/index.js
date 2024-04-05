@@ -116,6 +116,10 @@ app.post('/register', async (req, res) => {
   const username = req.body.username;
   const email = req.body.email;
   
+  if (!username || !hash || !email) {
+    return res.status(400).send('Missing required fields');
+  }
+
   const query = `INSERT INTO users (username, password, email) VALUES ($1, $2, $3);`;
   db.any(query, [username, hash, email])
   .then(data =>{
