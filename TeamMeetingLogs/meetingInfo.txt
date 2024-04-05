@@ -33,3 +33,45 @@ Nikhil Notes:
 By next meeting:
 
 
+
+
++-----------------------------------
+04/05
+
+Time 5:15-5:30
+
+* Went over what we have completed 
+    - JSON from API and SQL tables created 
+    - Created endpoints for registering, login, and boilerplate pages for homepage, trips page, parks page, and notifications page.
+
+* Went over what API endpoints we are using:
+    - Parks
+    - Activities
+    - Tours
+    - Events
+    - Things to do
+    - Campgrounds
+
+
+* Plans for Week 3:
+    - Complete Lab 11 
+
+    - Add functionality/content to pages
+        - Create trips
+        - Adding parks, events, etc to individual days
+        - Specifying and adding parks to a planner
+        - Create Trip form and add submission to database
+        - Homepage, trips page, parks page, notifications page
+
+    - Go over what else we should do, what to add/change, or perhaps cut down on
+
+    - If we can, we will add sharing trips notifications to other users
+
+
+* Question about presentation date and details:
+    - Project presentations will happen in person, no concrete details as to where or when
+
+
+* We are the furthest ahead of all groups, noice!
+
++-----------------------------------
