@@ -78,6 +78,8 @@ const user = {
   email: undefined
 }
 
+
+
 app.get('/', (req, res) => {
   res.redirect('/login'); //this will call the /anotherRoute route in the API
 });
@@ -114,12 +116,18 @@ app.post('/register', async (req, res) => {
   const username = req.body.username;
   const email = req.body.email;
   
+  if (!username || !hash || !email) {
+    return res.status(400).send('Missing required fields');
+  }
+
   const query = `INSERT INTO users (username, password, email) VALUES ($1, $2, $3);`;
   db.any(query, [username, hash, email])
   .then(data =>{
+    res.status(200);
     res.redirect('/login')
   })
   .catch((err) =>{
+    res.status(400);
     res.redirect('/register')
     console.log("error")
   });
