@@ -14,7 +14,7 @@ CREATE TABLE trips(
     start_date date, --'12/30/2024'
     number_of_days INTEGER,
     username VARCHAR(50) REFERENCES users (username) ON DELETE CASCADE,
-    trip_progress text, --default as 'planned', later editing to 'in progress' and 'completed'
+    trip_progress text --default as 'planned', later editing to 'in progress' and 'completed'
 );
 
 --DROP TABLE IF EXISTS days;
