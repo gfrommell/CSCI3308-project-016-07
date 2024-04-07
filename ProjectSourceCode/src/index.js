@@ -12,6 +12,7 @@ const bodyParser = require('body-parser');
 const session = require('express-session'); // To set the session object. To store or access session data, use the `req.session`, which is (generally) serialized as JSON by the store.
 const bcrypt = require('bcrypt'); //  To hash passwords
 const axios = require('axios'); // To make HTTP requests from our server. We'll learn more about it in Part C.
+const { error } = require('console');
 
 // *****************************************************
 // <!-- Section 2 : Connect to DB -->
@@ -93,7 +94,9 @@ app.get('/exploreParks', (req, res) => {
 });
 
 app.get('/createTrip', (req, res) => {
-  res.render('pages/createTrip');
+  res.render('pages/createTrip',{
+    
+  });
 });
 
 
@@ -183,6 +186,21 @@ app.post("/createTrip",(req, res) =>{
   INSERT INTO trips (trip_title, start_date, number_of_days, username, trip_progress)
   VALUES ($1, $2, $3, $4, $5)
   `
+
+  db.any(query, [title, startdate, numDays, username, trip_progress])
+  .then(data =>{
+    res.render('pages/home',{
+      message: "Created Trip Successfully!"
+    })
+  })
+
+  .catch(err=>{
+    res.render('pages/home',{
+      error: true,
+      message: "Could not create the trip!"
+    })
+    console.log("ERROR create trips did not work")
+  })
 
 });
 
