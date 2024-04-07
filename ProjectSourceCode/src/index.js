@@ -169,6 +169,23 @@ app.post('/login', (req,res)=> {
   
 });
 
+app.post("/createTrip",(req, res) =>{
+  const title = req.body.title;
+  const startdate = req.body.startdate;
+  const numDays = req.body.numdays;
+  const username = user.username;
+  if(!username){
+    res.status(400).send("How did you even get this far without logging in???")
+  }
+  const trip_progress = "Planned"; // this is default
+
+  const query = `
+  INSERT INTO trips (trip_title, start_date, number_of_days, username, trip_progress)
+  VALUES ($1, $2, $3, $4, $5)
+  `
+
+});
+
 // Authentication Middleware.
 const auth = (req, res, next) => {
   if (!req.session.user) {
