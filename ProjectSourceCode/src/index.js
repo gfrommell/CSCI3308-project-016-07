@@ -12,6 +12,7 @@ const bodyParser = require('body-parser');
 const session = require('express-session'); // To set the session object. To store or access session data, use the `req.session`, which is (generally) serialized as JSON by the store.
 const bcrypt = require('bcrypt'); //  To hash passwords
 const axios = require('axios'); // To make HTTP requests from our server. We'll learn more about it in Part C.
+const { error } = require('console');
 
 // *****************************************************
 // <!-- Section 2 : Connect to DB -->
@@ -88,24 +89,11 @@ app.get('/register', (req, res) => {
   res.render('pages/register');
 });
 
-app.get('/exploreParks', (req, res) => {
-  res.render('pages/exploreParks');
-});
-
-app.get('/createTrip', (req, res) => {
-  res.render('pages/createTrip');
-});
-
-
-
-
-app.get('/home', (req, res) => {
-  res.render('pages/home');
-});
-
 app.get('/login', (req, res) =>{
   res.render('pages/login');
 });
+
+
 
 // Register
 app.post('/register', async (req, res) => {
@@ -119,7 +107,7 @@ app.post('/register', async (req, res) => {
   if (!username || !hash || !email) {
     return res.status(400).send('Missing required fields');
   }
-
+  
   const query = `INSERT INTO users (username, password, email) VALUES ($1, $2, $3);`;
   db.any(query, [username, hash, email])
   .then(data =>{
@@ -147,7 +135,7 @@ app.post('/login', (req,res)=> {
       user.username = data.username; // save data to the user object 
       user.password = data.password;
       user.email = data.email;
-    
+      
       req.session.user = user;
       req.session.save();
       res.redirect("/home") //TODO: redirect to home page when it is created
@@ -169,6 +157,7 @@ app.post('/login', (req,res)=> {
   
 });
 
+
 // Authentication Middleware.
 const auth = (req, res, next) => {
   if (!req.session.user) {
@@ -178,13 +167,63 @@ const auth = (req, res, next) => {
   next();
 };
 
+// Authentication Required
+app.use(auth);
+
+app.get('/exploreParks', (req, res) => {
+  res.render('pages/exploreParks');
+});
+
+app.get('/createTrip', (req, res) => {
+  res.render('pages/createTrip',{
+    
+  });
+});
+
+app.get('/home', (req, res) => {
+  res.render('pages/home');
+});
+
+
+
+app.post("/createTrip",(req, res) =>{
+  const title = req.body.title;
+  const startdate = req.body.startdate;
+  const numDays = req.body.numdays;
+  const username = user.username;
+  if(!username){
+    res.status(400).send("How did you even get this far without logging in???")
+  }
+  const trip_progress = "Planned"; // this is default
+
+  const query = `
+  INSERT INTO trips (trip_title, start_date, number_of_days, username, trip_progress)
+  VALUES ($1, $2, $3, $4, $5)
+  `
+
+  db.any(query, [title, startdate, numDays, username, trip_progress])
+  .then(data =>{
+    res.render('pages/home',{
+      message: "Created Trip Successfully!"
+    })
+  })
+
+  .catch(err=>{
+    res.render('pages/home',{
+      error: true,
+      message: "Could not create the trip!"
+    })
+    console.log("ERROR create trips did not work")
+  })
+  
+});
+
+
 app.get('/logout', (req, res) => {
   req.session.destroy();
   res.render('pages/logout');
 });
 
-// Authentication Required
-app.use(auth);
 
 // *****************************************************
 // <!-- Section 5 : Start Server-->
