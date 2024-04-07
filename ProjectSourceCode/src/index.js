@@ -89,26 +89,11 @@ app.get('/register', (req, res) => {
   res.render('pages/register');
 });
 
-app.get('/exploreParks', (req, res) => {
-  res.render('pages/exploreParks');
-});
-
-app.get('/createTrip', (req, res) => {
-  res.render('pages/createTrip',{
-    
-  });
-});
-
-
-
-
-app.get('/home', (req, res) => {
-  res.render('pages/home');
-});
-
 app.get('/login', (req, res) =>{
   res.render('pages/login');
 });
+
+
 
 // Register
 app.post('/register', async (req, res) => {
@@ -122,7 +107,7 @@ app.post('/register', async (req, res) => {
   if (!username || !hash || !email) {
     return res.status(400).send('Missing required fields');
   }
-
+  
   const query = `INSERT INTO users (username, password, email) VALUES ($1, $2, $3);`;
   db.any(query, [username, hash, email])
   .then(data =>{
@@ -150,7 +135,7 @@ app.post('/login', (req,res)=> {
       user.username = data.username; // save data to the user object 
       user.password = data.password;
       user.email = data.email;
-    
+      
       req.session.user = user;
       req.session.save();
       res.redirect("/home") //TODO: redirect to home page when it is created
@@ -171,6 +156,35 @@ app.post('/login', (req,res)=> {
   
   
 });
+
+
+// Authentication Middleware.
+const auth = (req, res, next) => {
+  if (!req.session.user) {
+    // Default to login page.
+    return res.redirect('/login');
+  }
+  next();
+};
+
+// Authentication Required
+app.use(auth);
+
+app.get('/exploreParks', (req, res) => {
+  res.render('pages/exploreParks');
+});
+
+app.get('/createTrip', (req, res) => {
+  res.render('pages/createTrip',{
+    
+  });
+});
+
+app.get('/home', (req, res) => {
+  res.render('pages/home');
+});
+
+
 
 app.post("/createTrip",(req, res) =>{
   const title = req.body.title;
@@ -201,25 +215,15 @@ app.post("/createTrip",(req, res) =>{
     })
     console.log("ERROR create trips did not work")
   })
-
+  
 });
 
-// Authentication Middleware.
-const auth = (req, res, next) => {
-  if (!req.session.user) {
-    // Default to login page.
-    return res.redirect('/login');
-  }
-  next();
-};
 
 app.get('/logout', (req, res) => {
   req.session.destroy();
   res.render('pages/logout');
 });
 
-// Authentication Required
-app.use(auth);
 
 // *****************************************************
 // <!-- Section 5 : Start Server-->
