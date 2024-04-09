@@ -138,20 +138,19 @@ app.post('/login', (req,res)=> {
       
       req.session.user = user;
       req.session.save();
-      res.redirect("/home") //TODO: redirect to home page when it is created
+      res.status(200);
+      res.redirect("/home")
     }
     else{
+      res.status(400);
       res.render('pages/login',{
-        error:true,
-        message: "Incorrect username or password"
+        error: true,
+        message: 'Incorrect username or password'
       })
     }
   })
-  
   .catch(err =>{
-    
-    res.redirect('/register')
-    
+    res.status(400);
   })
   
   
@@ -217,6 +216,8 @@ app.post("/createTrip",(req, res) =>{
   })
   
 });
+
+
 
 
 app.get('/logout', (req, res) => {
