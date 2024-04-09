@@ -137,33 +137,32 @@ app.post('/login', (req, res) => {
   const query = `SELECT username, password, email from users WHERE username = $1;`;
 
   db.one(query, [username])
-    .then(async (data) => {
-      const match = await bcrypt.compare(req.body.password, data.password);
-
-      if (match) { // login successesful
-        user.username = data.username; // save data to the user object 
-        user.password = data.password;
-        user.email = data.email;
-
-        req.session.user = user;
-        req.session.save();
-        res.redirect("/home");
-      }
-      else {
-        res.render('pages/login', {
-          error: true,
-          message: "Incorrect username or password"
-        })
-      }
-    })
-
-    .catch(err => {
-
-      res.redirect('/register')
-
-    })
-
-
+  .then( async (data) =>{
+    const match = await bcrypt.compare(req.body.password, data.password);
+    
+    if(match){ // login successesful
+      user.username = data.username; // save data to the user object 
+      user.password = data.password;
+      user.email = data.email;
+      
+      req.session.user = user;
+      req.session.save();
+      res.status(200);
+      res.redirect("/home")
+    }
+    else{
+      res.status(400);
+      res.render('pages/login',{
+        error: true,
+        message: 'Incorrect username or password'
+      })
+    }
+  })
+  .catch(err =>{
+    res.status(400);
+  })
+  
+  
 });
 
 // Authentication Middleware.
@@ -177,6 +176,63 @@ const auth = (req, res, next) => {
 
 // Authentication Required
 app.use(auth);
+
+app.get('/exploreParks', (req, res) => {
+  res.render('pages/exploreParks');
+});
+
+app.get('/createTrip', (req, res) => {
+  res.render('pages/createTrip',{
+    
+  });
+});
+
+app.get('/home', (req, res) => {
+  res.render('pages/home');
+});
+
+
+
+app.post("/createTrip",(req, res) =>{
+  const title = req.body.title;
+  const startdate = req.body.startdate;
+  const numDays = req.body.numdays;
+  const username = user.username;
+  if(!username){
+    res.status(400).send("How did you even get this far without logging in???")
+  }
+  const trip_progress = "Planned"; // this is default
+
+  const query = `
+  INSERT INTO trips (trip_title, start_date, number_of_days, username, trip_progress)
+  VALUES ($1, $2, $3, $4, $5)
+  `
+
+  db.any(query, [title, startdate, numDays, username, trip_progress])
+  .then(data =>{
+    res.render('pages/home',{
+      message: "Created Trip Successfully!"
+    })
+  })
+
+  .catch(err=>{
+    res.render('pages/home',{
+      error: true,
+      message: "Could not create the trip!"
+    })
+    console.log("ERROR create trips did not work")
+  })
+  
+});
+
+
+
+
+app.get('/logout', (req, res) => {
+  req.session.destroy();
+  res.render('pages/logout');
+});
+
 
 // *****************************************************
 // <!-- Section 5 : Start Server-->
