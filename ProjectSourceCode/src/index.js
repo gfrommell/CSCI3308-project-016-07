@@ -181,6 +181,10 @@ app.get('/exploreParks', (req, res) => {
   res.render('pages/exploreParks');
 });
 
+app.get('/alltrips', (req, res) => {
+  res.render('pages/allTrips');
+});
+
 app.get('/createTrip', (req, res) => {
   res.render('pages/createTrip',{
     
