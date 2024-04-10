@@ -174,7 +174,22 @@ app.get('/exploreParks', (req, res) => {
 });
 
 app.get('/alltrips', (req, res) => {
-  res.render('pages/allTrips');
+  
+  const query = 'SELECT trip_title, start_date, number_of_days, trip_progress FROM trips WHERE username = $1;';
+
+  db.any(query, [user.username])
+  .then(data => {
+    res.status(200).send("OK");
+    res.render('pages/allTrips', {
+      data: data
+    })
+  })
+  .catch(err => {
+    res.render('pages/allTrips', {
+      error: true,
+      message: "No data received"
+    })
+  })
 });
 
 app.get('/createTrip', (req, res) => {
