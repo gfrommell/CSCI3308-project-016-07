@@ -79,7 +79,23 @@ const user = {
 }
 
 app.get('/home', (req, res) => {
-  res.render('pages/home');
+  if (req.session.user) {
+    
+    const query = "SELECT trip_title, start_date , number_of_days, trip_progress FROM trips WHERE username = $1;";
+
+    db.any(query, [user.username])
+      .then(data => {
+        res.render('pages/home', { data: data });
+      })
+      .catch((err) => {
+        res.render('pages/home', { data: [] });
+        console.log("error")
+      });
+
+
+  } else {
+    res.redirect('/login'); // redirect users to login page  
+  }
 });
 
 app.get('/', (req, res) => {
@@ -106,7 +122,7 @@ app.post('/register', async (req, res) => {
   const query = `INSERT INTO users (username, password, email) VALUES ($1, $2, $3);`;
   db.any(query, [username, hash, email])
     .then(data => {
-      res.redirect('/login')
+      res.redirect('/home')
     })
     .catch((err) => {
       res.redirect('/register')

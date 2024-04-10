@@ -5,21 +5,19 @@
             <tr>
                 <th scope="col">Trip Name</th>
                 <th scope="col">Trip Date</th>
+                <th scope="col">Duration</th>
                 <th scope="col">Progress</th>
             </tr>
         </thead>
         <tbody>
+            {{#each data}}
             <tr>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
+                <td>{{data.trip_title}}</td>
+                <td>{{data.start_data}}</td>
+                <td>{{data.number_of_days}}</td>
+                <td>{{data.trip_progress}}</td>
             </tr>
-            <tr>
-
-                <td>Jacob</td>
-                <td>Thornton</td>
-                <td>@fat</td>
-            </tr>
+            {{/each}}
         </tbody>
     </table>
 </div>
