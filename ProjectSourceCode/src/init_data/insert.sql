@@ -201,7 +201,3 @@ CREATE TABLE days_to_trips(
         )
     INSERT INTO images_to_campgrounds
     SELECT image_id, campImages.campground_id FROM images INNER JOIN campImages ON images.url = campImages.url;
-
-
-
-

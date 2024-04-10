@@ -19,34 +19,34 @@ const axios = require('axios'); // To make HTTP requests from our server. We'll 
 
 // create `ExpressHandlebars` instance and configure the layouts and partials dir.
 const hbs = handlebars.create({
-    extname: 'hbs',
-    layoutsDir: __dirname + '/views/layouts',
-    partialsDir: __dirname + '/views/partials',
+  extname: 'hbs',
+  layoutsDir: __dirname + '/views/layouts',
+  partialsDir: __dirname + '/views/partials',
+});
+
+// database configuration
+const dbConfig = {
+  host: 'db', // the database server
+  port: 5432, // the database port
+  database: process.env.POSTGRES_DB, // the database name
+  user: process.env.POSTGRES_USER, // the user account to connect with
+  password: process.env.POSTGRES_PASSWORD, // the password of the user account
+};
+
+const db = pgp(dbConfig);
+
+// test your database
+db.connect()
+  .then(obj => {
+    console.log('Database connection successful'); // you can view this message in the docker compose logs
+    obj.done(); // success, release the connection;
+  })
+  .catch(error => {
+    console.log('ERROR:', error.message || error);
   });
-  
-  // database configuration
-  const dbConfig = {
-    host: 'db', // the database server
-    port: 5432, // the database port
-    database: process.env.POSTGRES_DB, // the database name
-    user: process.env.POSTGRES_USER, // the user account to connect with
-    password: process.env.POSTGRES_PASSWORD, // the password of the user account
-  };
-  
-  const db = pgp(dbConfig);
-  
-  // test your database
-  db.connect()
-    .then(obj => {
-      console.log('Database connection successful'); // you can view this message in the docker compose logs
-      obj.done(); // success, release the connection;
-    })
-    .catch(error => {
-      console.log('ERROR:', error.message || error);
-    });
 
 
-    // *****************************************************
+// *****************************************************
 // <!-- Section 3 : App Settings -->
 // *****************************************************
 
@@ -78,19 +78,19 @@ const user = {
   email: undefined
 }
 
-app.get('/welcome', (req, res) => {
-  res.json({status: 'success', message: 'Welcome!'});
+app.get('/home', (req, res) => {
+  res.render('pages/home');
 });
 
 app.get('/', (req, res) => {
-  res.redirect('/login'); //this will call the /anotherRoute route in the API
+  res.redirect('/login'); // redirect users to login page
 });
 
 app.get('/register', (req, res) => {
   res.render('pages/register');
 });
 
-app.get('/login', (req, res) =>{
+app.get('/login', (req, res) => {
   res.render('pages/login');
 });
 
@@ -98,56 +98,56 @@ app.get('/login', (req, res) =>{
 app.post('/register', async (req, res) => {
   //hash the password using bcrypt library
   const hash = await bcrypt.hash(req.body.password, 10);
-  
+
   // To-DO: Insert username and hashed password into the 'users' table
   const username = req.body.username;
   const email = req.body.email;
-  
+
   const query = `INSERT INTO users (username, password, email) VALUES ($1, $2, $3);`;
   db.any(query, [username, hash, email])
-  .then(data =>{
-    res.redirect('/login')
-  })
-  .catch((err) =>{
-    res.redirect('/register')
-    console.log("error")
-  });
+    .then(data => {
+      res.redirect('/login')
+    })
+    .catch((err) => {
+      res.redirect('/register')
+      console.log("error")
+    });
 });
 
-app.post('/login', (req,res)=> {
+app.post('/login', (req, res) => {
   const username = req.body.username;
   // const password = req.body.password;
-  
-  const query =  `SELECT username, password, email from users WHERE username = $1;`;
-  
+
+  const query = `SELECT username, password, email from users WHERE username = $1;`;
+
   db.one(query, [username])
-  .then( async (data) =>{
-    const match = await bcrypt.compare(req.body.password, data.password);
-    
-    if(match){ // login successesful
-      user.username = data.username; // save data to the user object 
-      user.password = data.password;
-      user.email = data.email;
-    
-      req.session.user = user;
-      req.session.save();
-      // res.redirect("/discover") //TODO: redirect to home page when it is created
-    }
-    else{
-      res.render('pages/login',{
-        error:true,
-        message: "Incorrect username or password"
-      })
-    }
-  })
-  
-  .catch(err =>{
-    
-    res.redirect('/register')
-    
-  })
-  
-  
+    .then(async (data) => {
+      const match = await bcrypt.compare(req.body.password, data.password);
+
+      if (match) { // login successesful
+        user.username = data.username; // save data to the user object 
+        user.password = data.password;
+        user.email = data.email;
+
+        req.session.user = user;
+        req.session.save();
+        res.redirect("/home");
+      }
+      else {
+        res.render('pages/login', {
+          error: true,
+          message: "Incorrect username or password"
+        })
+      }
+    })
+
+    .catch(err => {
+
+      res.redirect('/register')
+
+    })
+
+
 });
 
 // Authentication Middleware.
