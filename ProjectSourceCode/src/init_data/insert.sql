@@ -10,18 +10,19 @@ CREATE TABLE users(
 --DROP TABLE IF EXISTS trips;
 CREATE TABLE trips(
     trip_id SERIAL PRIMARY KEY,
-    start_date date,
+    trip_title text,
+    start_date date, --'12/30/2024'
     number_of_days INTEGER,
     username VARCHAR(50) REFERENCES users (username) ON DELETE CASCADE,
-    trip_progress text
+    trip_progress text --default as 'planned', later editing to 'in progress' and 'completed'
 );
 
 --DROP TABLE IF EXISTS days;
 CREATE TABLE days(
     day_id SERIAL PRIMARY KEY,
     day_number INTEGER,
-    trip_id INTEGER REFERENCES trips (trip_id) ON DELETE CASCADE,
-    campground_id text REFERENCES campgrounds (campground_id) ON DELETE CASCADE
+    trip_id INTEGER REFERENCES trips (trip_id) ON DELETE CASCADE
+    
 );
 
 --DROP TABLE IF EXISTS images;
@@ -103,9 +104,15 @@ CREATE TABLE days_to_tours(
 );
 
 --DROP TABLE IF EXISTS days_to_tours;
-CREATE TABLE days_to_tours(
+CREATE TABLE trips_to_users(
     trip_id INTEGER REFERENCES trips (trip_id) ON DELETE CASCADE,
     username VARCHAR(50) REFERENCES users (username) ON DELETE CASCADE
+);
+
+--DROP TABLE IF EXISTS days_to_tours;
+CREATE TABLE days_to_campgrounds(
+    campground_id text REFERENCES campgrounds (campground_id) ON DELETE CASCADE,
+    day_id INTEGER REFERENCES days (day_id) ON DELETE CASCADE
 );
 
 

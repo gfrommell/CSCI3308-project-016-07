@@ -12,6 +12,7 @@ const bodyParser = require('body-parser');
 const session = require('express-session'); // To set the session object. To store or access session data, use the `req.session`, which is (generally) serialized as JSON by the store.
 const bcrypt = require('bcrypt'); //  To hash passwords
 const axios = require('axios'); // To make HTTP requests from our server. We'll learn more about it in Part C.
+const { error } = require('console');
 
 // *****************************************************
 // <!-- Section 2 : Connect to DB -->
@@ -78,6 +79,8 @@ const user = {
   email: undefined
 }
 
+
+
 app.get('/', (req, res) => {
   res.redirect('/login'); //this will call the /anotherRoute route in the API
 });
@@ -105,6 +108,8 @@ app.get('/login', (req, res) =>{
   res.render('pages/login');
 });
 
+
+
 // Register
 app.post('/register', async (req, res) => {
   //hash the password using bcrypt library
@@ -114,12 +119,18 @@ app.post('/register', async (req, res) => {
   const username = req.body.username;
   const email = req.body.email;
   
+  if (!username || !hash || !email) {
+    return res.status(400).send('Missing required fields');
+  }
+  
   const query = `INSERT INTO users (username, password, email) VALUES ($1, $2, $3);`;
   db.any(query, [username, hash, email])
   .then(data =>{
+    res.status(200);
     res.redirect('/login')
   })
   .catch((err) =>{
+    res.status(400);
     res.redirect('/register')
     console.log("error")
   });
@@ -139,23 +150,22 @@ app.post('/login', (req,res)=> {
       user.username = data.username; // save data to the user object 
       user.password = data.password;
       user.email = data.email;
-    
+      
       req.session.user = user;
       req.session.save();
-      res.redirect("/home") //TODO: redirect to home page when it is created
+      res.status(200);
+      res.redirect("/home")
     }
     else{
+      res.status(400);
       res.render('pages/login',{
-        error:true,
-        message: "Incorrect username or password"
+        error: true,
+        message: 'Incorrect username or password'
       })
     }
   })
-  
   .catch(err =>{
-    
-    res.redirect('/register')
-    
+    res.status(400);
   })
   
   
@@ -191,6 +201,76 @@ const auth = (req, res, next) => {
 
 // Authentication Required
 app.use(auth);
+
+app.get('/exploreParks', (req, res) => {
+  res.render('pages/exploreParks');
+});
+
+app.get('/alltrips', (req, res) => {
+  res.render('pages/allTrips');
+});
+
+app.get('/createTrip', (req, res) => {
+  res.render('pages/createTrip',{
+    
+  });
+});
+
+app.get('/home', (req, res) => {
+  res.render('pages/home');
+});
+
+
+
+app.post("/createTrip",(req, res) =>{
+  const title = req.body.title;
+  const startdate = req.body.startdate;
+  const numDays = req.body.numdays;
+  const username = user.username;
+  if(!username){
+    res.status(400).send("How did you even get this far without logging in???")
+  }
+  const trip_progress = "Planned"; // this is default
+
+
+  //Insert into trips table and also return trip_id and num_days to be used to insert into days table
+  const queryTrips = `
+    INSERT INTO trips (trip_title, start_date, number_of_days, username, trip_progress)
+    VALUES ($1, $2, $3, $4, $5)
+    RETURNING trip_id, number_of_days; 
+  `
+  
+  const queryDays = `
+    INSERT INTO days (day_number, trip_id) VALUES ($1, $2);
+  `
+  
+  db.task(async task=>{
+    // result will have trip_id and number_of_days
+    const result = await task.one(queryTrips, [title, startdate, numDays, username, trip_progress]);
+    await task.none(queryDays, [result.number_of_days, result.trip_id])
+    
+    
+  })
+  .then(data=>{
+    res.render('pages/home',{
+      message: "Created Trip Successfully!"
+    })
+  })
+  .catch(err=>{
+    res.render('pages/home',{
+      error: true,
+      message: "Could not create the trip!"
+    })
+    console.log("ERROR create trips did not work")
+  })
+
+});
+
+app.get('/logout', (req, res) => {
+  req.session.destroy();
+  res.render('pages/logout');
+});
+
 
 // *****************************************************
 // <!-- Section 5 : Start Server-->

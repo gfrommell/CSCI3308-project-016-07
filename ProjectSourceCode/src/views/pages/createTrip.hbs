@@ -1,2 +1,45 @@
-<h1>CREATE TRIP</h1>
-<marquee> travel</marquee>
+
+<form action="/createTrip" method="post">
+
+    <div class="row mx-5 my-3">
+
+        <h1>Create Trip</h1>
+        
+    </div>
+    <div class="row mx-5">
+        
+
+        <div class="col-6">
+            <label for="title">Title</label>
+            <input class="form-control" type="text" name="title" id="title" required>
+        </div>
+    
+
+    </div>
+
+    <div class="row mx-5 my-5">
+
+       <div class="col-2">
+            <label for="startdate">Start Date</label>
+            <input class="form-control" type="date" name="startdate" id="startdate" required>
+       </div>
+
+
+            
+        <div class="col-2">
+            <label for="numdays">Number of Days</label>
+            <input class="form-control" type="number" name="numdays" id="numdays" min="1" required>
+        </div>
+
+    </div>
+    
+    <div class="row mx-5">
+        <div class="col-1">
+            <button class="btn btn-primary">Create</button>
+        </div>
+    </div>
+    
+
+    
+</form>
+

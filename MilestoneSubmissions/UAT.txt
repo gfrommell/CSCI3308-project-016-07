@@ -1,0 +1,57 @@
+Features Tested:
+Registering: new users to the application
+Logging in: all users of the application
+Creating trips: most users, planners (excluded: users who only want to search parks or get invited to trips)
+
+Registerting:
+positive: user can register 
+    localhost
+    1. User goes to localhost:3000/register
+    2. User fills in username, email, and password with data (testuser, test@gmail.com, p@ssw0rd)
+    3. User clicks "Register"
+    4. Expected behavior: local host loads to localhost:3000/login after "Register" is clicked
+negative: user cannot register with invalid input
+    localhost
+    1. User goes to localhost:3000/register
+    2. User fills in username, email, and password with data (testuser, test, p@ssw0rd)
+    3. User clicks "Register"
+    4. Expected behavior: local host stays on the register page, message occurs that tells user that there was a data input error
+
+Logging in:
+positive: user can log in 
+    localhost
+    1. User goes to localhost:3000/login
+    2. User fills in username and password with data (testuser, p@ssw0rd)
+    3. User clicks "Log in"
+    4. Expected behavior: local host loads to localhost:3000/home after "Log in" is clicked
+negative: user cannot log in with invalid username
+    localhost
+    1. User goes to localhost:3000/login
+    2. User fills in username and password with data (test, p@ssw0rd)
+    3. User clicks "Log in"
+    4. Expected behavior: local host loads login page with error message, resetting input
+negative: user cannot log in with invalid password
+    localhost
+    1. User goes to localhost:3000/login
+    2. User fills in username and password with data (testuser, 1234)
+    3. User clicks "Log in"
+    4. Expected behavior: local host loads login page with error message, resetting input
+
+
+Creating Trips;
+positive: user can create a trip
+    localhost
+    1. User logs into the local host (dependent on registering) (testuser p@ssw0rd)
+    2. User clicks the "Create Trip" button in the nav bar 
+    3. The localhost loads the /createtrips page with the form (title, start date, duration)
+    4. The user gives input data (Test Trip, 07/07/2024, 5)
+    5. The user clicks the "Create trip" button
+    6. The user verifies the trip is displayed on the home page
+negative: user cannot create a trip with invalid input
+    localhost
+    1. User logs into the local host (dependent on registering) (testuser p@ssw0rd)
+    2. User clicks the "Create Trip" button in the nav bar 
+    3. The localhost loads the /createtrips page with the form (title, start date, duration)
+    4. The user gives input data (Test Trip, June 8th, five)
+    5. The user clicks the "Create trip" button
+    6. The local host reloads /createtrips with an error message informing the user that they gave invalid input on the start date and duration fields
