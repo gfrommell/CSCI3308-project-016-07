@@ -22,7 +22,7 @@ CREATE TABLE days(
     day_id SERIAL PRIMARY KEY,
     day_number INTEGER,
     trip_id INTEGER REFERENCES trips (trip_id) ON DELETE CASCADE,
-    campground_id text REFERENCES campgrounds (campground_id) ON DELETE CASCADE
+    
 );
 
 --DROP TABLE IF EXISTS images;
