@@ -184,10 +184,6 @@ app.get('/createTrip', (req, res) => {
   });
 });
 
-
-
-
-
 app.post("/createTrip", (req, res) => {
   const title = req.body.title;
   const startdate = req.body.startdate;
