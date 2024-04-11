@@ -247,7 +247,10 @@ app.post("/createTrip",(req, res) =>{
   db.task(async task=>{
     // result will have trip_id and number_of_days
     const result = await task.one(queryTrips, [title, startdate, numDays, username, trip_progress]);
-    await task.none(queryDays, [result.number_of_days, result.trip_id])
+    for(let i = 1; i <=  numDays; i++){
+
+      await task.none(queryDays, [i, result.trip_id])
+    }
     
     
   })
