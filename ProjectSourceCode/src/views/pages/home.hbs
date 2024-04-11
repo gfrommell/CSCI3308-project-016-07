@@ -12,10 +12,10 @@
         <tbody>
             {{#each data}}
             <tr>
-                <td>{{data.trip_title}}</td>
-                <td>{{data.start_data}}</td>
-                <td>{{data.number_of_days}}</td>
-                <td>{{data.trip_progress}}</td>
+                <td>{{this.trip_title}}</td>
+                <td>{{this.start_date}}</td>
+                <td>{{this.number_of_days}}</td>
+                <td>{{this.trip_progress}}</td>
             </tr>
             {{/each}}
         </tbody>
