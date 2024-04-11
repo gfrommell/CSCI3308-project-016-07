@@ -1,2 +1,23 @@
-<marquee><h1> HOMEPAGE!</h1></marquee>
-<marquee> I LOVE HIKING RAHHHHH!</marquee>
+<div class="container">
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Trip Name</th>
+                <th scope="col">Trip Date</th>
+                <th scope="col">Duration</th>
+                <th scope="col">Progress</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each data}}
+            <tr>
+                <td>{{this.trip_title}}</td>
+                <td>{{this.start_date}}</td>
+                <td>{{this.number_of_days}}</td>
+                <td>{{this.trip_progress}}</td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</div>
