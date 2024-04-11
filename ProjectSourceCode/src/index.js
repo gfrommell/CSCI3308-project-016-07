@@ -278,12 +278,10 @@ app.post("/createTrip", (req, res) => {
 
   })
     .then(data => {
-      res.render('pages/home', {
-        message: "Created Trip Successfully!"
-      })
+      res.redirect('/home');
     })
     .catch(err => {
-      res.render('pages/home', {
+      res.redirect('/createTrip', {
         error: true,
         message: "Could not create the trip!"
       })
