@@ -199,18 +199,30 @@ app.post("/createTrip",(req, res) =>{
   }
   const trip_progress = "Planned"; // this is default
 
-  const query = `
-  INSERT INTO trips (trip_title, start_date, number_of_days, username, trip_progress)
-  VALUES ($1, $2, $3, $4, $5)
-  `
 
-  db.any(query, [title, startdate, numDays, username, trip_progress])
-  .then(data =>{
+  //Insert into trips table and also return trip_id and num_days to be used to insert into days table
+  const queryTrips = `
+    INSERT INTO trips (trip_title, start_date, number_of_days, username, trip_progress)
+    VALUES ($1, $2, $3, $4, $5)
+    RETURNING trip_id, number_of_days; 
+  `
+  
+  const queryDays = `
+    INSERT INTO days (day_number, trip_id) VALUES ($1, $2);
+  `
+  
+  db.task(async task=>{
+    // result will have trip_id and number_of_days
+    const result = await task.one(queryTrips, [title, startdate, numDays, username, trip_progress]);
+    await task.none(queryDays, [result.number_of_days, result.trip_id])
+    
+    
+  })
+  .then(data=>{
     res.render('pages/home',{
       message: "Created Trip Successfully!"
     })
   })
-
   .catch(err=>{
     res.render('pages/home',{
       error: true,
@@ -218,11 +230,8 @@ app.post("/createTrip",(req, res) =>{
     })
     console.log("ERROR create trips did not work")
   })
-  
+
 });
-
-
-
 
 app.get('/logout', (req, res) => {
   req.session.destroy();
