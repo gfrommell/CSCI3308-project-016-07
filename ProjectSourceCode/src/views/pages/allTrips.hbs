@@ -1,1 +1,21 @@
-<h1>All Your Trips</h1>
+<div class="container">
+    <h1>All Your Trips</h1>
+    <table>
+        <tr>
+            <th>Trip Name</th>
+            <th>Trip Date</th>
+            <th>Duration</th>
+            <th>Progress</th>
+            <th></th>
+        </tr>
+        {{#each data}}
+        <tr>
+            <td>{{this.trip_title}}</td>
+            <td>{{this.start_date}}</td>
+            <td>{{this.number_of_days}}</td>
+            <td>{{this.trip_progress}}</td>
+            <td><button type="button" class="btn btn-outline-dark">Share</button></td>
+        </tr>
+        {{/each}}
+    </table>
+</div>

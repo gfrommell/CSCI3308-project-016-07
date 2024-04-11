@@ -179,7 +179,7 @@ app.get('/alltrips', (req, res) => {
 
   db.any(query, [user.username])
   .then(data => {
-    res.status(200).send("OK");
+    //res.status(200);
     res.render('pages/allTrips', {
       data: data
     })
