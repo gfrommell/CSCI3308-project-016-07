@@ -90,6 +90,11 @@ app.get('/exploreParks', (req, res) => {
   res.render('pages/exploreParks');
 });
 
+app.get('/createTrip', (req, res) => {
+  res.render('pages/createTrip');
+});
+
+
 
 
 app.get('/home', (req, res) => {
@@ -154,6 +159,25 @@ app.post('/login', (req,res)=> {
   })
   
   
+});
+
+//Explore Parks 
+app.get('/exploreParks', (req, res) => {
+  var q1 = 'Select park_code, fullName, states, json_array_elements(park.images)-->>`url` FROM parks LIMIT 12;';
+
+  db.any(q1)
+    .then(function (data) {
+      res.status(200).json({
+        data:data,
+      });
+      res.render('pages/exploreParks');
+    })
+    .catch(err => {
+      res.render('pages/exploreParks', {
+        error: true,
+        message: err.message,
+      });
+    });
 });
 
 // Authentication Middleware.
