@@ -219,10 +219,6 @@ const auth = (req, res, next) => {
 // Authentication Required
 app.use(auth);
 
-app.get('/exploreParks', (req, res) => {
-  res.render('pages/exploreParks');
-});
-
 app.get('/alltrips', (req, res) => {
 
   const query = 'SELECT trip_title, start_date, number_of_days, trip_progress FROM trips WHERE username = $1;';
