@@ -292,6 +292,14 @@ app.post("/createTrip", (req, res) => {
 
 });
 
+
+app.post('/trip/delete',(req,res)=>{
+  const id = req.body.trip_id;
+  const query =  `
+    DELETE FROM trips where trip_id = ${id};
+  `
+})
+
 app.get('/logout', (req, res) => {
   req.session.destroy();
   res.render('pages/logout');

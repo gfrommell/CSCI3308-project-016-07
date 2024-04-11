@@ -22,9 +22,24 @@
                 <td width="200">{{formatDate this.start_date}}</td>
                 <td width="150">{{this.number_of_days}} Days</td>
                 <td width="150">{{this.trip_progress}}</td>
-                <td width="150"><button type="button" class="btn btn-outline-dark">Share</button></td>
+
+                <td>
+                <form action="/trip/share" method="post">
+                    <button type="button" class="btn btn-outline-dark">Share</button>
+                </form>
+                </td>
+
+                <td>
+                    <form action="/trip/delete" method="post">
+                        <button class="btn btn-outline-danger" name="trip_id" value="{{this.trip_id}}">Delete</button>
+                    </form>
+                </td>
+                
+
             </tr>
             {{/each}}
         </table>
     </div>
+
 </body>
+
