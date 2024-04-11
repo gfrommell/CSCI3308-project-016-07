@@ -89,6 +89,17 @@ app.get('/register', (req, res) => {
   res.render('pages/register');
 });
 
+app.get('/createTrip', (req, res) => {
+  res.render('pages/createTrip');
+});
+
+
+
+
+app.get('/home', (req, res) => {
+  res.render('pages/home');
+});
+
 app.get('/login', (req, res) =>{
   res.render('pages/login');
 });
@@ -156,6 +167,26 @@ app.post('/login', (req,res)=> {
   
 });
 
+//Explore Parks 
+app.get('/exploreParks', (req, res) => {
+  var q1 = `Select park_code, fullName, states, json_array_elements(parks.images)->>'url' FROM parks LIMIT 12;`;
+  console.log("EXPLORE PATHS----")
+  db.any(q1)
+    .then(data =>{
+      console.log(data)
+      res.render('pages/exploreParks', {
+        data:data,
+      });
+      res.status(200);
+    })
+    .catch(err => {
+      res.status(400);
+      res.render('pages/exploreParks', {
+        error: true,
+        message: 'no data',
+      })
+    })
+});
 
 // Authentication Middleware.
 const auth = (req, res, next) => {
