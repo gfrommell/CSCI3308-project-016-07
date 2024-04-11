@@ -238,11 +238,6 @@ app.get('/createTrip', (req, res) => {
   });
 });
 
-app.get('/home', (req, res) => {
-  res.render('pages/home');
-});
-
-
 
 app.post("/createTrip",(req, res) =>{
   const title = req.body.title;
