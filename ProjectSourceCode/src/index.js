@@ -14,6 +14,8 @@ const bcrypt = require('bcrypt'); //  To hash passwords
 const axios = require('axios'); // To make HTTP requests from our server. We'll learn more about it in Part C.
 const { error } = require('console');
 
+
+
 // *****************************************************
 // <!-- Section 2 : Connect to DB -->
 // *****************************************************
@@ -25,6 +27,13 @@ const hbs = handlebars.create({
     partialsDir: __dirname + '/views/partials',
   });
   
+  Handlebars.registerHelper('formatDate', function(date) {
+    const d = new Date(date);
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${year}/${day}/${month}`;
+  });
   // database configuration
   const dbConfig = {
     host: 'db', // the database server
