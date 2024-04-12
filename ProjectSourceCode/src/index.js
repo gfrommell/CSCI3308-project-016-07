@@ -243,6 +243,31 @@ app.get('/createTrip', (req, res) => {
   });
 });
 
+app.get('/notifications', (req, res) => {
+  const username = user.username;
+  const query = `
+  INSERT INTO notifications(trip_id,sender_username,receiver_username,message)
+  VALUES(1, $1,$1,'hello');
+  SELECT * FROM notifications WHERE receiver_username = $1;`;
+
+  db.any(query,username)
+  .then(data=>{
+    res.render('pages/notifications',{
+      data: data,
+      message: "Fetched notifications"
+    })
+  })
+  .catch(err=>{
+    res.render('pages/notifications',{
+      error: true,
+      message: "Could not fetch notifications"
+    })
+    console.log("ERROR")
+  })
+});
+
+
+
 
 app.post("/createTrip", (req, res) => {
   const title = req.body.title;
@@ -301,6 +326,30 @@ app.post('/trip/delete',(req,res)=>{
   })
   .catch(err=>{
     res.send(err)
+  })
+})
+
+// Share trip
+app.post('/trip/share',(req,res)=>{
+  const id = req.body.trip_id;
+  const sender = user.username;
+  const receiver = req.body.receiver_id;
+  //const date = new Date(year, month, day);
+  //console.log(date);
+  const query =  `
+    INSERT INTO notifications (trip_id,sender_username,receiver_username,message,date_sent)
+    VALUES($1, $2, $3,'${sender} has invited you to their trip', '2024/4/13');
+  `;
+
+  db.any(query, [id,sender,receiver])
+  .then(data =>{
+    res.redirect('/allTrips');
+  })
+  .catch(err=>{
+    res.redirect('/allTrips', {
+      error: true,
+      message: "Could not create the trip!"
+    });
   })
 })
 
