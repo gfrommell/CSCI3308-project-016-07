@@ -4,10 +4,14 @@
             border-bottom: 1px solid #ddd;
         }
     </style>
+
+    <script type="text/javascript" src="./script.js"></script>
+
 </head>
 <body>
     <div class="container">
         <h1>All Your Trips</h1><br>
+
         <table>
             <tr>
                 <th width="200">Trip Name</th>
@@ -27,9 +31,9 @@
                 <td>
 
                 {{!-- TODO: Share functionality --}}
-                <form action="/trip/share" method="post">
-                    <button type="button" class="btn btn-outline-dark">Share</button>
-                </form>
+                
+                    <button data-bs-toggle="modal" data-bs-target="#share-modal-{{this.trip_id}}" type="button" id="{{this.trip_id}}" class="share btn btn-outline-dark">Share</button>
+                
                 </td>
 
                 <td>
@@ -38,11 +42,35 @@
                     </form>
                 </td>
                 
+                <div id="share-modal-{{this.trip_id}}" class="modal" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Share this trip</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form action="/trip/share" method="post">
+
+                                    <label for="share_to" class="form-label">Share with this user</label>
+                                    <input type="text" class="form-control" id="share_to" placeholder="username">
+                                    <br>
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                    <button type="submit" name="trip_id" class="btn btn-primary" value="{{this.trip_id}}">Share</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
             </tr>
             {{/each}}
         </table>
+
+                 
+
     </div>
+
 
 </body>
 

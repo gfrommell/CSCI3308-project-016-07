@@ -81,13 +81,13 @@ app.use(
   })
 );
 
+app.use(express.static(path.join('resources', 'js')));
 
 const user = {
   username: undefined,
   password: undefined,
   email: undefined
 }
-
 
 
 app.get('/', (req, res) => {
@@ -122,7 +122,6 @@ app.get('/home', (req, res) => {
 app.get('/login', (req, res) => {
   res.render('pages/login');
 });
-
 
 
 // Register
@@ -189,10 +188,10 @@ app.post('/login', (req, res) => {
 //Explore Parks 
 app.get('/exploreParks', (req, res) => {
   var q1 = `Select park_code, fullName, states, json_array_elements(parks.images)->>'url' FROM parks LIMIT 12;`;
-  console.log("EXPLORE PATHS----")
+  //console.log("EXPLORE PATHS----")
   db.any(q1)
     .then(data => {
-      console.log(data)
+      //console.log(data)
       res.render('pages/exploreParks', {
         data: data,
       });
