@@ -34,6 +34,13 @@ Handlebars.registerHelper('formatDate', function (date) {
   const day = String(d.getDate()).padStart(2, '0');
   return `${year}/${day}/${month}`;
 });
+
+Handlebars.registerHelper('isDefined', function (value) {
+  return value !== null;
+});
+
+
+
 // database configuration
 const dbConfig = {
   host: 'db', // the database server
@@ -245,10 +252,7 @@ app.get('/createTrip', (req, res) => {
 
 app.get('/notifications', (req, res) => {
   const username = user.username;
-  const query = `
-  INSERT INTO notifications(trip_id,sender_username,receiver_username,message)
-  VALUES(1, $1,$1,'hello');
-  SELECT * FROM notifications WHERE receiver_username = $1;`;
+  const query = `SELECT * FROM notifications WHERE receiver_username = $1;`;
 
   db.any(query,username)
   .then(data=>{
@@ -266,6 +270,25 @@ app.get('/notifications', (req, res) => {
   })
 });
 
+app.post('/notifications', (req,res) => {
+
+  const thing = req.body.invite;
+  console.log(thing);
+  res.redirect('/notifications');
+/*
+  const query =  `
+    DELETE FROM trips WHERE trip_id = ${id};
+  `
+  db.none(query)
+  .then(()=>{
+    res.redirect('/allTrips')
+  })
+  .catch(err=>{
+    res.send(err)
+  })
+*/
+
+});
 
 
 

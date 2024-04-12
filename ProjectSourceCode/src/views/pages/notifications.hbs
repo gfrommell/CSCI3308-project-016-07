@@ -15,18 +15,43 @@
                     <td>{{message}}</td>
                     <td>{{date_sent}}</td>
                     <td>
-                        <div id="action-buttons-{{notifications_id}}">
-                        <button class="btn btn-success" onclick="handleResponse({{notifications_id}}, 'accept')">Accept</button>
-                        <button class="btn btn-danger" onclick="handleResponse({{notifications_id}}, 'decline')">Decline</button>
+                       <!-- <div id="action-buttons-{{notifications_id}}"> -->
+
+                       <!-- <form action="/notifications" method="post">
+                            <button class="btn btn-success" type="submit"onclick="handleResponse({{notifications_id}}, 'accept')">Accept</button>
+                            <button class="btn btn-danger" type="submit" name="decline" value="false" onclick="handleResponse({{notifications_id}}, 'decline')">Decline</button>
+                        </form>
                         </div>
                        <div id="action-response-{{notifications_id}}" style="display: none;"></div>
+                            -->
+
+                        {{#if (isDefined status)}}
+
+                            {{#if status}}
+                                <p>Accepted</p>
+                            {{else}}
+                                <p>Declined</p>
+                            {{/if}}
+
+                        {{else}}
+
+                        <form action="/notifications" method="post">
+                            <button class="btn btn-success" type="submit" name="invite" value="{ 'status': 'true', 'notif_id': '{{notifications_id}}', 'sender': '{{sender_username}}' }">Accept</button>
+                        </form>
+                        <form action="/notifications" method="post"></form>
+                            <button class="btn btn-danger" type="submit" name="invite" value="{ 'status': 'false', 'notif_id': '{{notifications_id}}', 'sender': '{{sender_username}}' }">Decline</button>
+                        </form>
+                        
+
+                        {{/if}}
+
                     </td>
                 </tr>
                 {{/each}}
             </tbody>
         </table>
 
-        <script>
+      <!--  <script>
              function handleResponse(notificationId, action) {
                     const actionDiv = document.getElementById(`action-buttons-${notificationId}`);
                     const responseDiv = document.getElementById(`action-response-${notificationId}`);
@@ -41,6 +66,6 @@
                     }
                     responseDiv.style.display = 'block';
             }
-        </script>
+        </script> -->
 
         
