@@ -221,7 +221,7 @@ app.use(auth);
 
 app.get('/alltrips', (req, res) => {
 
-  const query = 'SELECT trip_title, start_date, number_of_days, trip_progress FROM trips WHERE username = $1;';
+  const query = 'SELECT trip_id, trip_title, start_date, number_of_days, trip_progress FROM trips WHERE username = $1;';
 
   db.any(query, [user.username])
     .then(data => {
@@ -290,12 +290,19 @@ app.post("/createTrip", (req, res) => {
 
 });
 
-
+// Delete row on the All trips page
 app.post('/trip/delete',(req,res)=>{
   const id = req.body.trip_id;
   const query =  `
-    DELETE FROM trips where trip_id = ${id};
+    DELETE FROM trips WHERE trip_id = ${id};
   `
+  db.none(query)
+  .then(()=>{
+    res.redirect('/allTrips')
+  })
+  .catch(err=>{
+    res.send(err)
+  })
 })
 
 app.get('/logout', (req, res) => {
