@@ -243,6 +243,31 @@ app.get('/createTrip', (req, res) => {
   });
 });
 
+app.get('/notifications', (req, res) => {
+  const username = user.username;
+  const query = `
+  INSERT INTO notifications(trip_id,sender_username,receiver_username,message)
+  VALUES(1, $1,$1,'hello');
+  SELECT * FROM notifications WHERE receiver_username = $1;`;
+
+  db.any(query,username)
+  .then(data=>{
+    res.render('pages/notifications',{
+      data: data,
+      message: "Fetched notifications"
+    })
+  })
+  .catch(err=>{
+    res.render('pages/notifications',{
+      error: true,
+      message: "Could not fetch notifications"
+    })
+    console.log("ERROR")
+  })
+});
+
+
+
 
 app.post("/createTrip", (req, res) => {
   const title = req.body.title;
