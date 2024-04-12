@@ -329,6 +329,30 @@ app.post('/trip/delete',(req,res)=>{
   })
 })
 
+// Share trip
+app.post('/trip/share',(req,res)=>{
+  const id = req.body.trip_id;
+  const sender = user.username;
+  const receiver = req.body.receiver_id;
+  //const date = new Date(year, month, day);
+  //console.log(date);
+  const query =  `
+    INSERT INTO notifications (trip_id,sender_username,receiver_username,message,date_sent)
+    VALUES($1, $2, $3,'${sender} has invited you to their trip', '2024/4/13');
+  `;
+
+  db.any(query, [id,sender,receiver])
+  .then(data =>{
+    res.redirect('/allTrips');
+  })
+  .catch(err=>{
+    res.redirect('/allTrips', {
+      error: true,
+      message: "Could not create the trip!"
+    });
+  })
+})
+
 app.get('/logout', (req, res) => {
   req.session.destroy();
   res.render('pages/logout');
