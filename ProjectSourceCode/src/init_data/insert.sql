@@ -115,6 +115,19 @@ CREATE TABLE days_to_campgrounds(
     day_id INTEGER REFERENCES days (day_id) ON DELETE CASCADE
 );
 
+CREATE TABLE notifications(
+    notifications_id SERIAL PRIMARY KEY,
+    trip_id INTEGER REFERENCES trips (trip_id) ON DELETE CASCADE,
+    sender_username VARCHAR(50) REFERENCES users (username) ON DELETE CASCADE,
+    receiver_username VARCHAR(50) REFERENCES users (username) ON DELETE CASCADE,
+    message VARCHAR(100),
+    status BOOLEAN,
+    date_sent VARCHAR(50)
+);
+
+-- INSERT INTO notifications(trip_id,sender_username,receiver_username,message)
+-- VALUES(1,'bob','jack','hello');
+
 
 --https://www.postgresql.org/docs/9.3/functions-json.html For doing SQL methods with json data
 
