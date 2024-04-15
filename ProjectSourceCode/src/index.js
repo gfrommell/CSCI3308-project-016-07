@@ -187,7 +187,7 @@ app.post('/login', (req, res) => {
 
 //Explore Parks 
 app.get('/exploreParks', (req, res) => {
-  var q1 = `Select park_code, fullName, states, json_array_elements(parks.images)->>'url' AS url FROM parks LIMIT 12;`;
+  var q1 = `Select park_code, fullName, states, json_array_elements(parks.images)->>'url' FROM parks LIMIT 12;`;
   //console.log("EXPLORE PATHS----")
   db.any(q1)
     .then(data => {
@@ -344,7 +344,7 @@ app.post('/trip/share',(req,res)=>{
     res.redirect('/allTrips');
   })
   .catch(err=>{
-    res.redirect('/allTrips', {
+    res.render('pages/allTrips', {
       error: true,
       message: "Could not create the trip!"
     });
