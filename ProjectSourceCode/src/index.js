@@ -300,6 +300,17 @@ app.post('/trip/delete',(req,res)=>{
   `
 })
 
+app.get('/trip_id/edit/day_id', (req,res) =>{
+
+})
+
+app.get('/trip_id/edit/day_id/park_code', (req, res) =>{
+
+})
+
+app.get('/trip_id/edit/day_id/park_code/id', (req, res) =>{
+  
+})
 app.get('/logout', (req, res) => {
   req.session.destroy();
   res.render('pages/logout');
