@@ -187,7 +187,7 @@ app.post('/login', (req, res) => {
 
 //Explore Parks 
 app.get('/exploreParks', (req, res) => {
-  var q1 = `Select park_code, fullName, states, json_array_elements(parks.images)->>'url' FROM parks LIMIT 12;`;
+  var q1 = `Select park_code, fullName, states, json_array_elements(parks.images)->>'url' AS url FROM parks LIMIT 12;`;
   //console.log("EXPLORE PATHS----")
   db.any(q1)
     .then(data => {
@@ -246,8 +246,6 @@ app.get('/createTrip', (req, res) => {
 app.get('/notifications', (req, res) => {
   const username = user.username;
   const query = `
-  INSERT INTO notifications(trip_id,sender_username,receiver_username,message)
-  VALUES(1, $1,$1,'hello');
   SELECT * FROM notifications WHERE receiver_username = $1;`;
 
   db.any(query,username)
