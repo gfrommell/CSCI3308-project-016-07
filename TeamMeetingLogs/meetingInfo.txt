@@ -75,3 +75,30 @@ Time 5:15-5:30
 * We are the furthest ahead of all groups, noice!
 
 +-----------------------------------
+4/12
+
+Time 5:15-5:25
+
+*Went over the new verison completed
+    - Added All Trips page / functionality
+    - Added Create Trips page / functionality
+    - Added Notfications page / semi-functionality
+    - We completed everything in progress on Github
+
+*Went over plans for next week
+    - Going to finish functionality for notifications
+    - Going to add hosting capibilities
+
+*TA notes
+    - Website looks good, room for UI improvement
+    - Github project is well managed
+    - Still ahead compared to other groups
+
+*Questions
+    - Q: When will be presenting?
+      A: During lab on 04/25, multiple TAs will score based off 
+         the rubrick that has been made public already. We will
+         also be asked what portions of the project people completed.
+
++-----------------------------------
+      

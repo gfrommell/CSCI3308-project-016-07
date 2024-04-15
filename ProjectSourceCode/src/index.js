@@ -81,13 +81,13 @@ app.use(
   })
 );
 
+app.use(express.static(path.join('resources', 'js')));
 
 const user = {
   username: undefined,
   password: undefined,
   email: undefined
 }
-
 
 
 app.get('/', (req, res) => {
@@ -122,7 +122,6 @@ app.get('/home', (req, res) => {
 app.get('/login', (req, res) => {
   res.render('pages/login');
 });
-
 
 
 // Register
@@ -189,10 +188,10 @@ app.post('/login', (req, res) => {
 //Explore Parks 
 app.get('/exploreParks', (req, res) => {
   var q1 = `Select park_code, fullName, states, json_array_elements(parks.images)->>'url' FROM parks LIMIT 12;`;
-  console.log("EXPLORE PATHS----")
+  //console.log("EXPLORE PATHS----")
   db.any(q1)
     .then(data => {
-      console.log(data)
+      //console.log(data)
       res.render('pages/exploreParks', {
         data: data,
       });
@@ -221,7 +220,7 @@ app.use(auth);
 
 app.get('/alltrips', (req, res) => {
 
-  const query = 'SELECT trip_title, start_date, number_of_days, trip_progress FROM trips WHERE username = $1;';
+  const query = 'SELECT trip_id, trip_title, start_date, number_of_days, trip_progress FROM trips WHERE username = $1;';
 
   db.any(query, [user.username])
     .then(data => {
@@ -243,6 +242,29 @@ app.get('/createTrip', (req, res) => {
 
   });
 });
+
+app.get('/notifications', (req, res) => {
+  const username = user.username;
+  const query = `
+  SELECT * FROM notifications WHERE receiver_username = $1;`;
+
+  db.any(query,username)
+  .then(data=>{
+    res.render('pages/notifications',{
+      data: data,
+      message: "Fetched notifications"
+    })
+  })
+  .catch(err=>{
+    res.render('pages/notifications',{
+      error: true,
+      message: "Could not fetch notifications"
+    })
+    console.log("ERROR")
+  })
+});
+
+
 
 
 app.post("/createTrip", (req, res) => {
@@ -278,12 +300,10 @@ app.post("/createTrip", (req, res) => {
 
   })
     .then(data => {
-      res.render('pages/home', {
-        message: "Created Trip Successfully!"
-      })
+      res.redirect('/home');
     })
     .catch(err => {
-      res.render('pages/home', {
+      res.redirect('/createTrip', {
         error: true,
         message: "Could not create the trip!"
       })
@@ -292,12 +312,43 @@ app.post("/createTrip", (req, res) => {
 
 });
 
-
+// Delete row on the All trips page
 app.post('/trip/delete',(req,res)=>{
   const id = req.body.trip_id;
   const query =  `
-    DELETE FROM trips where trip_id = ${id};
+    DELETE FROM trips WHERE trip_id = ${id};
   `
+  db.none(query)
+  .then(()=>{
+    res.redirect('/allTrips')
+  })
+  .catch(err=>{
+    res.send(err)
+  })
+})
+
+// Share trip
+app.post('/trip/share',(req,res)=>{
+  const id = req.body.trip_id;
+  const sender = user.username;
+  const receiver = req.body.receiver_id;
+  //const date = new Date(year, month, day);
+  //console.log(date);
+  const query =  `
+    INSERT INTO notifications (trip_id,sender_username,receiver_username,message,date_sent)
+    VALUES($1, $2, $3,'${sender} has invited you to their trip', '2024/4/13');
+  `;
+
+  db.any(query, [id,sender,receiver])
+  .then(data =>{
+    res.redirect('/allTrips');
+  })
+  .catch(err=>{
+    res.render('pages/allTrips', {
+      error: true,
+      message: "Could not create the trip!"
+    });
+  })
 })
 
 app.post('/trip_id/edit/day_id', (req,res) =>{
