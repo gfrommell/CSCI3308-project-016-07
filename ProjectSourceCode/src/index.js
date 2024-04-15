@@ -300,16 +300,31 @@ app.post('/trip/delete',(req,res)=>{
   `
 })
 
-app.get('/trip_id/edit/day_id', (req,res) =>{
-
+app.post('/trip_id/edit/day_id', (req,res) =>{
+  // Render a list of activites associated with a park
+  const park = req.body.park; //NOTE: might need to change this, as button could return park Id it self
+  const park_code = `
+    SELECT park_code from parks where fullName = ${park}
+  `
+  db.one(park_code)
+  .then(data =>{
+    const activites = data.activites;
+    res.render('#', {
+      activites
+    })
+  })
+  .catch(err =>{
+    console.log(err);
+    console.log("Error trying to get park_code")
+  })
 })
 
-app.get('/trip_id/edit/day_id/park_code', (req, res) =>{
-
+app.post('/trip_id/edit/day_id/park_code', (req, res) =>{
+ // Render everything associated with activities or events
 })
 
-app.get('/trip_id/edit/day_id/park_code/id', (req, res) =>{
-  
+app.post('/trip_id/edit/day_id/park_code/id', (req, res) =>{
+  // Add specific item to that day
 })
 app.get('/logout', (req, res) => {
   req.session.destroy();
