@@ -23,7 +23,7 @@
             {{#each data}}
             <tr>
                 
-                <td witdh="200" >{{this.trip_title}}</td>
+                <td witdh="200"> <a href="/edit/{{this.trip_id}}">{{this.trip_title}} </a></td>
                 <td width="200">{{formatDate this.start_date}}</td>
                 <td width="150">{{this.number_of_days}} Days</td>
                 <td width="150">{{this.trip_progress}}</td>
@@ -37,7 +37,7 @@
                 </td>
 
                 <td>
-                    <form action="/trip/delete" method="post">
+                    <form action="/tripDelete" method="post">
                         <button class="btn btn-outline-danger" name="trip_id" value="{{this.trip_id}}">Delete</button>
                     </form>
                 </td>
@@ -50,7 +50,7 @@
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                                <form action="/trip/share" method="post">
+                                <form action="/tripShare" method="post">
 
                                     <label for="share_to" class="form-label">Share {{this.trip_title}} with this user</label>
                                     <input type="text" class="form-control" id="share_to" name="receiver_id" placeholder="username">

@@ -34,6 +34,35 @@ Handlebars.registerHelper('formatDate', function (date) {
   const day = String(d.getDate()).padStart(2, '0');
   return `${year}/${day}/${month}`;
 });
+
+Handlebars.registerHelper('formatDateInput', function (date) {
+  const d = new Date(date);
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+});
+
+Handlebars.registerHelper('formatDateIncrement', function (date, index) {
+  const d = new Date(date);
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()+ index).padStart(2, '0');
+  return `${year}/${day}/${month}`;
+});
+
+//https://stackoverflow.com/questions/11924452/iterating-over-basic-for-loop-using-handlebars-js/11924998#11924998
+Handlebars.registerHelper('times', function(n, block) {
+    var accum = '';
+    for(var i = 0; i < n; ++i) {
+        block.data.index = i;
+        block.data.first = i === 0;
+        block.data.last = i === (n - 1);
+        accum += block.fn(this);
+    }
+    return accum;
+});
+
 // database configuration
 const dbConfig = {
   host: 'db', // the database server
@@ -313,7 +342,7 @@ app.post("/createTrip", (req, res) => {
 });
 
 // Delete row on the All trips page
-app.post('/trip/delete',(req,res)=>{
+app.post('/tripDelete',(req,res)=>{
   const id = req.body.trip_id;
   const query =  `
     DELETE FROM trips WHERE trip_id = ${id};
@@ -325,10 +354,10 @@ app.post('/trip/delete',(req,res)=>{
   .catch(err=>{
     res.send(err)
   })
-})
+});
 
 // Share trip
-app.post('/trip/share',(req,res)=>{
+app.post('/tripShare',(req,res)=>{
   const id = req.body.trip_id;
   const sender = user.username;
   const receiver = req.body.receiver_id;
@@ -349,7 +378,76 @@ app.post('/trip/share',(req,res)=>{
       message: "Could not create the trip!"
     });
   })
-})
+});
+
+
+app.get('/edit/:id', (req, res) => {
+  const id = req.params.id;
+  const query = `
+  SELECT * FROM trips WHERE trip_id = $1;`;
+  const q2 = `SELECT * FROM days WHERE trip_id = $1;`;
+
+  //TODO: more queries to get days_to : parks, events, things, tours, campgrounds
+
+  db.task('get-trip-days', task => {
+    return task.batch([task.any(query, id), task.any(q2, id)]);
+  })
+  .then(data=>{
+    console.log(data[1]);
+    res.render('pages/tripEditDetails',{
+      trip: data[0],
+      days: data[1],
+      message: "Fetched data"
+    })
+  })
+  .catch(err=>{
+    res.render('pages/allTrips',{
+      error: true,
+      message: "Could not fetch notifications"
+    })
+    console.log("ERROR")
+  })
+});
+
+app.post('/tripEdit', (req, res) => {
+  const id = req.body.trip_id;
+  var q1 = '';
+  var q2 = '';
+  var q3 = '';
+
+  //if user edited title
+  if(!req.body.title.isEmpty){
+    q1 = `UPDATE trips SET trip_title = '${req.body.title}' WHERE trip_id = ${id};`;
+  }
+
+   //if user edited start date
+  if(!req.body.startdate.isEmpty){
+    q2 = `UPDATE trips SET start_date = '${req.body.startdate}' WHERE trip_id = ${id};`;
+  }
+
+   //if user edited number of days
+  if(!req.body.numdays.isEmpty){
+    q3 = `UPDATE trips SET number_of_days = '${req.body.numdays}' WHERE trip_id = ${id};`;
+  }
+
+  db.task('edit-trip-information', task => {
+    //run queries for each  field, unalteried fields will be empty queries
+    return task.batch([task.any(q1), task.any(q2), task.any(q3)]);
+  })
+  .then(data=>{
+    res.status(201);
+    res.redirect(`/edit/${id}`);
+  })
+  .catch(err=>{
+    res.status(err);
+    res.redirect(`/edit/${id}`,{
+      error: true,
+      message: "Could not edit trip"
+    })
+  })
+});
+
+
 
 app.route('/trip_id/edit/day_id')
   // Render a list of activites associated with a park? Or is it just a search bar and stuff?
