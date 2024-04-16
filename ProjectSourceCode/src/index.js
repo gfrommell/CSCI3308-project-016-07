@@ -351,24 +351,32 @@ app.post('/trip/share',(req,res)=>{
   })
 })
 
-app.post('/trip_id/edit/day_id', (req,res) =>{
-  // Render a list of activites associated with a park
-  const park = req.body.park; //NOTE: might need to change this, as button could return park Id it self
-  const park_code = `
-    SELECT park_code from parks where fullName = ${park}
-  `
-  db.one(park_code)
-  .then(data =>{
-    const activites = data.activites;
-    res.render('#', {
-      activites
+app.route('/trip_id/edit/day_id')
+  // Render a list of activites associated with a park? Or is it just a search bar and stuff?
+  .get((req, res) =>{
+    res.render('pages/activities')
+  })
+
+
+  .post((req, res) =>{
+    const park_name = req.body.park_name; //NOTE: might need to change this, as button could return park Id it self
+    const park_code = `
+      SELECT park_code, activities from parks where fullName = '${park_name}';
+    `
+    db.one(park_code)
+    .then(data =>{
+      console.log(data)
+      
+      res.render('pages/activities',{
+        data
+      })
     })
+    .catch(err =>{
+      console.log(err);
+      console.log("Error trying to get park_code")
+    })
+
   })
-  .catch(err =>{
-    console.log(err);
-    console.log("Error trying to get park_code")
-  })
-})
 
 app.post('/trip_id/edit/day_id/park_code', (req, res) =>{
  // Render everything associated with activities or events

@@ -1,0 +1,25 @@
+<h1>
+    Enter a park name
+</h1>
+<form action="/trip_id/edit/day_id" method="post">
+
+    <input type="text" name="park_name" id="park_name">
+    <button>Submit</button>
+
+</form>
+
+{{#if data}}
+<table class="table">
+    <th>Activities</th>
+
+    {{#each data.activities}}
+    <tr>
+        <td>
+            <p>{{this.name}}</p>
+        </td>
+    </tr>
+    {{/each}}
+</table>
+  
+{{/if}}
+
