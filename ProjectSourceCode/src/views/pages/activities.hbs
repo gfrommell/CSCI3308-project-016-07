@@ -1,21 +1,30 @@
 <h1>
-    Enter a park name
+    Enter a park name and the activities of it will show
 </h1>
-<form action="/trip_id/edit/day_id" method="post">
+<form class="mx-5" action="/trip_id/edit/day_id" method="post">
 
-    <input type="text" name="park_name" id="park_name">
-    <button>Submit</button>
+    <input class="form-control w-25 " type="text" name="park_name" id="park_name">
+    <button class="btn btn-primary">Submit</button>
 
 </form>
 
 {{#if data}}
 <table class="table">
-    <th>Activities</th>
+    <tr>
 
+        <th>Activities</th>
+        <th></th>
+
+    </tr>
     {{#each data.activities}}
     <tr>
         <td>
-            <p>{{this.name}}</p>
+            {{this.name}}
+        </td>
+        <td width="150" >
+            <form action="/trip_id/edit/day_id/park_code" method="post">
+                <button class="btn btn-outline-success" name="id" value="{{this.id}}">Add to Day</button>
+            </form>
         </td>
     </tr>
     {{/each}}

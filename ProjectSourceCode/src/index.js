@@ -380,6 +380,8 @@ app.route('/trip_id/edit/day_id')
 
 app.post('/trip_id/edit/day_id/park_code', (req, res) =>{
  // Render everything associated with activities or events
+  const id = req.body.id;
+  res.redirect('/home')
 })
 
 app.post('/trip_id/edit/day_id/park_code/id', (req, res) =>{
