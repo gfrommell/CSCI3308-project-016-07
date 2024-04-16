@@ -16,8 +16,8 @@
                     <td>{{date_sent}}</td>
                     <td>
                         <div id="action-buttons-{{notifications_id}}">
-                        <button class="btn btn-success" onclick="handleResponse({{notifications_id}}, 'accept', {{recevier_username}})">Accept</button>
-                        <button class="btn btn-danger" onclick="handleResponse({{notifications_id}}, 'decline', {{recevier_username}})">Decline</button>
+                        <button class="btn btn-success" onclick="handleResponse({{notifications_id}}, 'accept', '{{receiver_username}}', '{{trip_id}}')">Accept</button>
+                        <button class="btn btn-danger" onclick="handleResponse({{notifications_id}}, 'decline', '{{receiver_username}}', '{{trip_id}}')">Decline</button>
                         </div>
                        <div id="action-response-{{notifications_id}}" style="display: none;"></div>
                     </td>
@@ -27,7 +27,7 @@
         </table>
 
         <script>
-        function handleResponse(notificationId, action, receiverUsername) {
+        function handleResponse(notificationId, action, receiverUsername, tripID) {
             const actionDiv = document.getElementById(`action-buttons-${notificationId}`);
             const responseDiv = document.getElementById(`action-response-${notificationId}`);
             actionDiv.style.display = 'none';
@@ -35,7 +35,8 @@
             let url = '';
             let bodyData = {
                 notificationId: notificationId,
-                receiverUsername: receiverUsername
+                receiverUsername: receiverUsername,
+                tripID: tripID
             };
 
             if(action === 'accept'){
@@ -56,12 +57,8 @@
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(bodyData)
-            }).then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            }).then(data => {
+            })
+            .then(data => {
                 console.log('Success:', data);
             }).catch(error => {
                 console.error('Error:', error);

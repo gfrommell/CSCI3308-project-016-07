@@ -265,12 +265,11 @@ app.get('/notifications', (req, res) => {
 
 app.post('/notifications/accepted', async (req, res) => {
   console.log('Request Body:', req.body);
-  const receiverUsername = req.body.receiverUsername;
-  const notificationId = req.body.notificationId;
+  const { notificationId, receiverUsername, tripID } = req.body;
   try {
     await db.task(async task => {
       const insertQuery = 'INSERT INTO trips_to_users (trip_id, username) VALUES ($1, $2)';
-      await task.none(insertQuery, [notificationId, receiverUsername]);
+      await task.none(insertQuery, [tripID, receiverUsername]);
       const updateQuery = 'UPDATE notifications SET status = true WHERE notifications_id = $1';
       await task.none(updateQuery, [notificationId]);
     });
