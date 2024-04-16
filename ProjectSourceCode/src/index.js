@@ -220,21 +220,28 @@ app.use(auth);
 
 app.get('/alltrips', (req, res) => {
 
-  const query = 'SELECT trip_id, trip_title, start_date, number_of_days, trip_progress FROM trips WHERE username = $1;';
+  const username = user.username;
 
-  db.any(query, [user.username])
-    .then(data => {
-      //res.status(200);
-      res.render('pages/allTrips', {
-        data: data
-      })
-    })
-    .catch(err => {
-      res.render('pages/allTrips', {
-        error: true,
-        message: "No data received"
-      })
-    })
+  const query = `
+  SELECT t.trip_id, t.trip_title, t.start_date, t.number_of_days, t.trip_progress
+  FROM trips t
+  LEFT JOIN trips_to_users ttu ON t.trip_id = ttu.trip_id
+  WHERE t.username = $1 OR ttu.username = $1;
+`;
+
+db.any(query, [username])
+  .then(data => {
+    res.render('pages/allTrips', {
+      data: data
+    });
+  })
+  .catch(err => {
+    console.error('Error fetching all trips:', err);
+    res.render('pages/allTrips', {
+      error: true,
+      message: "No data received"
+    });
+  });
 });
 
 app.get('/createTrip', (req, res) => {
