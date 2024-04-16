@@ -385,6 +385,7 @@ app.get('/edit/:id', (req, res) => {
   const id = req.params.id;
   const query = `
   SELECT * FROM trips WHERE trip_id = $1;`;
+  
   const q2 = `SELECT * FROM days WHERE trip_id = $1;`;
 
   //TODO: more queries to get days_to : parks, events, things, tours, campgrounds
@@ -449,36 +450,49 @@ app.post('/tripEdit', (req, res) => {
 
 
 
-app.route('/trip_id/edit/day_id')
+app.route('/:trip_id/edit/:day_id')
   // Render a list of activites associated with a park? Or is it just a search bar and stuff?
   .get((req, res) =>{
+    // const id = req.params.id;
+    // const query = `
+    // SELECT * FROM trips WHERE trip_id = $1;`;
     res.render('pages/activities')
   })
 
 
-  .post((req, res) =>{
-    const park_name = req.body.park_name; //NOTE: might need to change this, as button could return park Id it self
-    const park_code = `
-      SELECT park_code, activities from parks where fullName = '${park_name}';
-    `
-    db.one(park_code)
-    .then(data =>{
-      console.log(data)
+  .post((req, res) =>{ //! insert into the days_to_parks
+
+    const park_name = req.body.park_name;
+    // const query = `
+    //   INSERT INTO days_to_parks (day_id, park_code) VALUES ()
+    // `
+    console.log(req.params.day_id)
+    console.log(park_name)
+    res.redirect('/edit/:id')
+
+    // const park_name = req.body.park_name; //NOTE: might need to change this, as button could return park Id it self
+    // const park_code = `
+    //   SELECT park_code, activities from parks where fullName = '${park_name}';
+    // `
+    // db.one(park_code)
+    // .then(data =>{
+    //   console.log(data)
       
-      res.render('pages/activities',{
-        data
-      })
-    })
-    .catch(err =>{
-      console.log(err);
-      console.log("Error trying to get park_code")
-    })
+    //   res.render('pages/activities',{
+    //     data
+    //   })
+    // })
+    // .catch(err =>{
+    //   console.log(err);
+    //   console.log("Error trying to get park_code")
+    // })
 
   })
 
 app.post('/trip_id/edit/day_id/park_code', (req, res) =>{
  // Render everything associated with activities or events
   const id = req.body.id;
+  console.log(id)
   res.redirect('/home')
 })
 

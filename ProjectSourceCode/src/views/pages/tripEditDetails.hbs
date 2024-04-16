@@ -23,7 +23,10 @@
                     </div>
 
                     <div class="col p-2 d-inline">
-                        <button type="button" class="btn btn-outline-dark">Add to day</button>
+                        <form action="/{{this.trip_id}}/edit/{{@index}}" method="get">
+                            
+                            <button class="btn btn-outline-dark">Add to day</button>
+                        </form>
                     </div>
                 </div>
 
