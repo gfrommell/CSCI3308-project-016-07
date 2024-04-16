@@ -245,8 +245,7 @@ app.get('/createTrip', (req, res) => {
 
 app.get('/notifications', (req, res) => {
   const username = user.username;
-  const query = `
-  SELECT * FROM notifications WHERE receiver_username = $1;`;
+  const query = `SELECT * FROM notifications WHERE receiver_username = $1 AND status IS NOT TRUE AND status IS NOT FALSE`;
 
   db.any(query,username)
   .then(data=>{
@@ -262,6 +261,41 @@ app.get('/notifications', (req, res) => {
     })
     console.log("ERROR")
   })
+});
+
+app.post('/notifications/accepted', async (req, res) => {
+  console.log('Request Body:', req.body);
+  const receiverUsername = req.body.receiverUsername;
+  const notificationId = req.body.notificationId;
+  try {
+    await db.task(async task => {
+      const insertQuery = 'INSERT INTO trips_to_users (trip_id, username) VALUES ($1, $2)';
+      await task.none(insertQuery, [notificationId, receiverUsername]);
+      const updateQuery = 'UPDATE notifications SET status = true WHERE notifications_id = $1';
+      await task.none(updateQuery, [notificationId]);
+    });
+    res.send({ success: true, message: 'Accepted' });
+  } 
+  catch (error) {
+    console.error('Error:', error);
+    res.status(500).send({ success: false, message: 'Error processing your request', error: error.message });
+  }
+});
+
+
+app.post('/notifications/declined', async (req, res) => {
+  const { notificationId } = req.body;
+  try {
+    await db.task(async task => {
+      const updateQuery = 'UPDATE notifications SET status = false WHERE notifications_id = $1';
+      await task.none(updateQuery, [notificationId]);
+    });
+    res.send({ success: true, message: 'Declined' });
+  } 
+  catch (error) {
+    console.error('Error:', error);
+    res.status(500).send({ success: false, message: 'Error processing your request', error: error.message });
+  }
 });
 
 
