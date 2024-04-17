@@ -131,12 +131,7 @@ app.get('/register', (req, res) => {
 app.get('/home', (req, res) => {
   if (req.session.user) {
 
-    const query = `
-  SELECT t.trip_id, t.trip_title, t.start_date, t.number_of_days, t.trip_progress
-  FROM trips t
-  LEFT JOIN trips_to_users ttu ON t.trip_id = ttu.trip_id
-  WHERE t.username = $1 OR ttu.username = $1;
-`;
+    const query = "SELECT trip_title, start_date , number_of_days, trip_progress FROM trips WHERE username = $1;";
 
     db.any(query, [user.username])
       .then(data => {
@@ -434,10 +429,12 @@ app.get('/edit/:id/:day_id?', (req, res) => {
 
   
     console.log("IN DAY ID")
-    q2 = `SELECT DISTINCT days.*, trips.*, days_to_parks.park_code 
+    q2 = `
+    SELECT DISTINCT days.*, trips.*, days_to_parks.park_code, parks.fullName
     FROM days 
     INNER JOIN trips ON days.trip_id = trips.trip_id 
     LEFT JOIN days_to_parks ON days.day_id = days_to_parks.day_id 
+    LEFT JOIN parks ON parks.park_code = days_to_parks.park_code
     WHERE trips.trip_id = $1
     ORDER BY days.day_id ASC;`;
 
@@ -546,13 +543,10 @@ app.route('/:trip_id/edit/:day_id')
       const park_code = await task.one(get_park_code, [park_name])
       const check = await task.any(check_query,[day_id]);
       if(check.length == 0){
-        console.log(check)
         await task.none(query, [day_id, park_code.park_code ])
       }
       else{
-        await task.none(`DELETE FROM days_to_parks WHERE day_id = $1;`, [day_id])
-        await task.none(query, [day_id, park_code.park_code ])
-
+        await task.none(`UPDATE days_to_parks SET park_code = $1 WHERE day_id = $2;`, [park_code.park_code ,day_id])
       }
    
     })
