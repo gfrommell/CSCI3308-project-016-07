@@ -34,6 +34,8 @@ Handlebars.registerHelper('formatDate', function (date) {
   const day = String(d.getDate()).padStart(2, '0');
   return `${year}/${day}/${month}`;
 });
+
+
 // database configuration
 const dbConfig = {
   host: 'db', // the database server
@@ -234,19 +236,19 @@ app.get('/alltrips', (req, res) => {
   WHERE t.username = $1 OR ttu.username = $1;
 `;
 
-db.any(query, [username])
-  .then(data => {
-    res.render('pages/allTrips', {
-      data: data
+  db.any(query, [username])
+    .then(data => {
+      res.render('pages/allTrips', {
+        data: data
+      });
+    })
+    .catch(err => {
+      console.error('Error fetching all trips:', err);
+      res.render('pages/allTrips', {
+        error: true,
+        message: "No data received"
+      });
     });
-  })
-  .catch(err => {
-    console.error('Error fetching all trips:', err);
-    res.render('pages/allTrips', {
-      error: true,
-      message: "No data received"
-    });
-  });
 });
 
 app.get('/createTrip', (req, res) => {
@@ -259,20 +261,20 @@ app.get('/notifications', (req, res) => {
   const username = user.username;
   const query = `SELECT * FROM notifications WHERE receiver_username = $1 AND status IS NOT TRUE AND status IS NOT FALSE`;
 
-  db.any(query,username)
-  .then(data=>{
-    res.render('pages/notifications',{
-      data: data,
-      message: "Fetched notifications"
+  db.any(query, username)
+    .then(data => {
+      res.render('pages/notifications', {
+        data: data,
+        message: "Fetched notifications"
+      })
     })
-  })
-  .catch(err=>{
-    res.render('pages/notifications',{
-      error: true,
-      message: "Could not fetch notifications"
+    .catch(err => {
+      res.render('pages/notifications', {
+        error: true,
+        message: "Could not fetch notifications"
+      })
+      console.log("ERROR")
     })
-    console.log("ERROR")
-  })
 });
 
 app.post('/notifications/accepted', async (req, res) => {
@@ -286,7 +288,7 @@ app.post('/notifications/accepted', async (req, res) => {
       await task.none(updateQuery, [notificationId]);
     });
     res.send({ success: true, message: 'Accepted' });
-  } 
+  }
   catch (error) {
     console.error('Error:', error);
     res.status(500).send({ success: false, message: 'Error processing your request', error: error.message });
@@ -302,7 +304,7 @@ app.post('/notifications/declined', async (req, res) => {
       await task.none(updateQuery, [notificationId]);
     });
     res.send({ success: true, message: 'Declined' });
-  } 
+  }
   catch (error) {
     console.error('Error:', error);
     res.status(500).send({ success: false, message: 'Error processing your request', error: error.message });
@@ -357,42 +359,42 @@ app.post("/createTrip", (req, res) => {
 });
 
 // Delete row on the All trips page
-app.post('/trip/delete',(req,res)=>{
+app.post('/trip/delete', (req, res) => {
   const id = req.body.trip_id;
-  const query =  `
+  const query = `
     DELETE FROM trips WHERE trip_id = ${id};
   `
   db.none(query)
-  .then(()=>{
-    res.redirect('/allTrips')
-  })
-  .catch(err=>{
-    res.send(err)
-  })
+    .then(() => {
+      res.redirect('/allTrips')
+    })
+    .catch(err => {
+      res.send(err)
+    })
 })
 
 // Share trip
-app.post('/trip/share',(req,res)=>{
+app.post('/trip/share', (req, res) => {
   const id = req.body.trip_id;
   const sender = user.username;
   const receiver = req.body.receiver_id;
   //const date = new Date(year, month, day);
   //console.log(date);
-  const query =  `
+  const query = `
     INSERT INTO notifications (trip_id,sender_username,receiver_username,message,date_sent)
     VALUES($1, $2, $3,'${sender} has invited you to their trip', '2024/4/13');
   `;
 
-  db.any(query, [id,sender,receiver])
-  .then(data =>{
-    res.redirect('/allTrips');
-  })
-  .catch(err=>{
-    res.render('pages/allTrips', {
-      error: true,
-      message: "Could not create the trip!"
-    });
-  })
+  db.any(query, [id, sender, receiver])
+    .then(data => {
+      res.redirect('/allTrips');
+    })
+    .catch(err => {
+      res.render('pages/allTrips', {
+        error: true,
+        message: "Could not create the trip!"
+      });
+    })
 })
 
 app.get('/logout', (req, res) => {
