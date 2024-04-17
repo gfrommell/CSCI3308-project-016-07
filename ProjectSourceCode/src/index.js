@@ -268,7 +268,7 @@ app.get('/alltrips', (req, res) => {
     .then(data => {
       console.log(data);
       res.render('pages/allTrips', { 
-        data: data 
+        data: data
       });
     })
     .catch(err => {
@@ -290,20 +290,20 @@ app.get('/notifications', (req, res) => {
   const username = user.username;
   const query = `SELECT * FROM notifications WHERE receiver_username = $1 AND status IS NOT TRUE AND status IS NOT FALSE`;
 
-  db.any(query,username)
-  .then(data=>{
-    res.render('pages/notifications',{
-      data: data,
-      message: "Fetched notifications"
+  db.any(query, username)
+    .then(data => {
+      res.render('pages/notifications', {
+        data: data,
+        message: "Fetched notifications"
+      })
     })
-  })
-  .catch(err=>{
-    res.render('pages/notifications',{
-      error: true,
-      message: "Could not fetch notifications"
+    .catch(err => {
+      res.render('pages/notifications', {
+        error: true,
+        message: "Could not fetch notifications"
+      })
+      console.log("ERROR")
     })
-    console.log("ERROR")
-  })
 });
 
 app.post('/notifications/accepted', async (req, res) => {
@@ -317,7 +317,7 @@ app.post('/notifications/accepted', async (req, res) => {
       await task.none(updateQuery, [notificationId]);
     });
     res.send({ success: true, message: 'Accepted' });
-  } 
+  }
   catch (error) {
     console.error('Error:', error);
     res.status(500).send({ success: false, message: 'Error processing your request', error: error.message });
@@ -333,7 +333,7 @@ app.post('/notifications/declined', async (req, res) => {
       await task.none(updateQuery, [notificationId]);
     });
     res.send({ success: true, message: 'Declined' });
-  } 
+  }
   catch (error) {
     console.error('Error:', error);
     res.status(500).send({ success: false, message: 'Error processing your request', error: error.message });
@@ -388,9 +388,10 @@ app.post("/createTrip", (req, res) => {
 });
 
 // Delete row on the All trips page
-app.post('/tripDelete',(req,res)=>{
+
+app.post('/trip/delete', (req,res) => {
   const id = req.body.trip_id;
-  const query =  `
+  const query = `
     DELETE FROM trips WHERE trip_id = ${id};
   `
   db.none(query)
@@ -409,10 +410,11 @@ app.post('/tripShare',(req,res)=>{
   const receiver = req.body.receiver_id;
   //const date = new Date(year, month, day);
   //console.log(date);
-  const query =  `
+  const query = `
     INSERT INTO notifications (trip_id,sender_username,receiver_username,message,date_sent)
     VALUES($1, $2, $3,'${sender} has invited you to their trip', '2024/4/13');
   `;
+
 
   db.any(query, [id,sender,receiver])
   .then(data =>{
@@ -492,8 +494,6 @@ app.post('/tripEdit', (req, res) => {
     })
   })
 });
-
-
 
 app.get('/edit/:id', (req,res) => {
   const id = req.params.id;
