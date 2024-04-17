@@ -420,12 +420,23 @@ app.post('/tripShare',(req,res)=>{
 });
 
 
-app.get('/edit/:id', (req, res) => {
+app.get('/edit/:id/:day_id?', (req, res) => {
   const id = req.params.id;
+  const day_id = req.params.day_id;
   const query = `
   SELECT * FROM trips WHERE trip_id = $1;`;
+  let q2;
+
   
-  const q2 = `SELECT * FROM days WHERE trip_id = $1;`;
+    console.log("IN DAY ID")
+    q2 = `SELECT DISTINCT days.*, trips.*, days_to_parks.park_code 
+    FROM days 
+    INNER JOIN trips ON days.trip_id = trips.trip_id 
+    LEFT JOIN days_to_parks ON days.day_id = days_to_parks.day_id 
+    WHERE trips.trip_id = $1
+    ORDER BY days.day_id ASC;`;
+
+    
 
   // const q3 = `
   //   SELECT parks.park_code from parks INNER JOIN days_to_parks as dtp ON dtp.park_code = parks.park_code INNER JOIN days ON days.day_id = dtp.day_id INNER JOIN trips ON ${id} = days.trip_id;
@@ -434,10 +445,10 @@ app.get('/edit/:id', (req, res) => {
   //TODO: more queries to get days_to : parks, events, things, tours, campgrounds
 
   db.task('get-trip-days', task => {
-    return task.batch([task.any(query, id), task.any(q2, id)]);
+    return task.batch([task.one(query, id), task.any(q2, id)]);
   })
   .then(data=>{
-    console.log(data[0])
+    
     console.log(data[1]);
     // console.log(data[2])
     res.render('pages/tripEditDetails',{
@@ -512,11 +523,8 @@ app.route('/:trip_id/edit/:day_id')
 
     const park_name = req.body.park_name;
     const trip_id = req.params.trip_id;
-    const current_day_id = req.params.day_id
-    const day_id_query = 
-    `
-      SELECT day_id from days WHERE trip_id = ${trip_id} AND day_number = ${current_day_id};
-    `
+    const day_id = req.params.day_id;
+    
     const get_park_code = `
       SELECT park_code from parks WHERE fullName = $1;
     `
@@ -526,12 +534,11 @@ app.route('/:trip_id/edit/:day_id')
     `
     db.task(async task =>{
       const park_code = await task.one(get_park_code, [park_name])
-      const day_id = await task.one(day_id_query)
-      await task.none(query, [day_id.day_id, park_code.park_code ])
+      await task.none(query, [day_id, park_code.park_code ])
     })
     .then(()=>{
 
-      res.redirect(`/edit/${trip_id}`)
+      res.redirect(`/edit/${trip_id}/${day_id}`)
     })
 
   
