@@ -2,51 +2,45 @@
   
     {{#each trip}}
 
-        <h1>{{this.trip_title}}</h1>
+        <h1 class="pt-3 color-eggplant">{{this.trip_title}}</h1>
 
-        <div class="row">
-            <div class="col p-2 d-inline">Start Date: {{formatDate this.start_date}}</div>
-            <div class="col p-2 d-inline">Duration: {{this.number_of_days}} days</div>
-            <div class="col p-2 d-inline"><button data-bs-toggle="modal" data-bs-target="#edit-modal-{{this.trip_id}}" type="button" id="{{this.trip_id}}" class="edit btn btn-outline-dark">Edit trip details</button>  </div>
-
+        <div class="row pb-3 px-2 justify-content-between">
+            <div class="col-4 p-2 d-inline">Start Date: {{formatDate this.start_date}}</div>
+            <div class="col-4 p-2 d-inline">Duration: {{this.number_of_days}} days</div>
+            <div class="col-2 p-2 d-inline">
+                <button data-bs-toggle="modal" data-bs-target="#edit-modal-{{this.trip_id}}" type="button" id="{{this.trip_id}}" class="edit btn btn-dark">Edit trip details</button>
+            </div>
         </div>
 
 
-        
-
         {{#times this.number_of_days}}
 
-            <div> 
-                <div class="row"> 
-                    <div class="col p-2 d-inline" >
+            <div class="mb-5 shadow p-3 bg-body-tertiary rounded"> 
+                <div class="row justify-content-between"> 
+                    <div class="col-4 pb-2 d-inline" >
                         <h4>Day {{@index}}: {{formatDateIncrement this.start_date @index}} </h4>
                     </div>
 
-                    <div class="col p-2 d-inline">
+                    <div class="col-2 pb-2 d-inline">
                         <button type="button" class="btn btn-outline-dark">Add to day</button>
                     </div>
                 </div>
 
-                <table>
+                <table class="table table-light table-borderless">
 
                     <tr>
-                        <th>Park</th>
+                        <th><strong>Park</strong></th>
                     </tr>
 
 
                     <tr>
-                        <th>Items scheduled</th>
+                        <th><strong>Items scheduled</strong></th>
                     </tr>
 
                 </table>
 
             </div>
         {{/times}}
-
-
-
-
-
 
 
     <!--EDIT Trip title, start date, and duration-->
