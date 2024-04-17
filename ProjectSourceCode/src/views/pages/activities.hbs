@@ -1,14 +1,16 @@
 <h1>
     Enter a park name and the activities of it will show
 </h1>
-<form class="mx-5" action="/trip_id/edit/day_id" method="post">
+<form class="mx-5" action="/{{data.trip_id}}/edit/{{data.day_id}}" method="post">
 
     <input class="form-control w-25 " type="text" name="park_name" id="park_name">
     <button class="btn btn-primary">Submit</button>
 
 </form>
 
-{{#if data}}
+
+
+{{!-- {{#if data}}
 <table class="table">
     <tr>
 
@@ -23,12 +25,12 @@
         </td>
         <td width="150" >
             <form action="/trip_id/edit/day_id/park_code" method="post">
-                <button class="btn btn-outline-success" name="id" value="{{this.id}}">Add to Day</button>
+                <button class="btn btn-outline-success" name="id" value="{{this.trip_id}}">Add to Day</button>
             </form>
         </td>
     </tr>
     {{/each}}
 </table>
   
-{{/if}}
+{{/if}} --}}
 

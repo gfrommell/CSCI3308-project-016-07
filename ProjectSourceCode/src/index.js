@@ -388,16 +388,24 @@ app.get('/edit/:id', (req, res) => {
   
   const q2 = `SELECT * FROM days WHERE trip_id = $1;`;
 
+  // const q3 = `
+  //   SELECT parks.park_code from parks INNER JOIN days_to_parks as dtp ON dtp.park_code = parks.park_code INNER JOIN days ON days.day_id = dtp.day_id INNER JOIN trips ON ${id} = days.trip_id;
+  // `
+
   //TODO: more queries to get days_to : parks, events, things, tours, campgrounds
 
   db.task('get-trip-days', task => {
     return task.batch([task.any(query, id), task.any(q2, id)]);
   })
   .then(data=>{
+    console.log(data[0])
     console.log(data[1]);
+    // console.log(data[2])
     res.render('pages/tripEditDetails',{
       trip: data[0],
       days: data[1],
+
+      
       message: "Fetched data"
     })
   })
@@ -453,40 +461,42 @@ app.post('/tripEdit', (req, res) => {
 app.route('/:trip_id/edit/:day_id')
   // Render a list of activites associated with a park? Or is it just a search bar and stuff?
   .get((req, res) =>{
-    // const id = req.params.id;
-    // const query = `
-    // SELECT * FROM trips WHERE trip_id = $1;`;
-    res.render('pages/activities')
+    const data = {
+      day_id : req.params.day_id,
+      trip_id : req.params.trip_id
+    }
+    res.render('pages/activities',{data})
   })
 
 
   .post((req, res) =>{ //! insert into the days_to_parks
 
     const park_name = req.body.park_name;
-    // const query = `
-    //   INSERT INTO days_to_parks (day_id, park_code) VALUES ()
-    // `
-    console.log(req.params.day_id)
-    console.log(park_name)
-    res.redirect('/edit/:id')
+    const trip_id = req.params.trip_id;
+    const current_day_id = req.params.day_id
+    const day_id_query = 
+    `
+      SELECT day_id from days WHERE trip_id = ${trip_id} AND day_number = ${current_day_id};
+    `
+    const get_park_code = `
+      SELECT park_code from parks WHERE fullName = $1;
+    `
+    const query = `
+    
+      INSERT INTO days_to_parks (day_id, park_code) VALUES ($1, $2);
+    `
+    db.task(async task =>{
+      const park_code = await task.one(get_park_code, [park_name])
+      const day_id = await task.one(day_id_query)
+      await task.none(query, [day_id.day_id, park_code.park_code ])
+    })
+    .then(()=>{
 
-    // const park_name = req.body.park_name; //NOTE: might need to change this, as button could return park Id it self
-    // const park_code = `
-    //   SELECT park_code, activities from parks where fullName = '${park_name}';
-    // `
-    // db.one(park_code)
-    // .then(data =>{
-    //   console.log(data)
-      
-    //   res.render('pages/activities',{
-    //     data
-    //   })
-    // })
-    // .catch(err =>{
-    //   console.log(err);
-    //   console.log("Error trying to get park_code")
-    // })
+      res.redirect(`/edit/${trip_id}`)
+    })
 
+  
+ 
   })
 
 app.post('/trip_id/edit/day_id/park_code', (req, res) =>{
