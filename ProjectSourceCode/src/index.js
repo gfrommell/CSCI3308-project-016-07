@@ -223,25 +223,23 @@ app.get('/alltrips', (req, res) => {
   const username = user.username;
 
   const query = `
-  SELECT t.trip_id, t.trip_title, t.start_date, t.number_of_days, t.trip_progress
-  FROM trips t
-  LEFT JOIN trips_to_users ttu ON t.trip_id = ttu.trip_id
-  WHERE t.username = $1 OR ttu.username = $1;
-`;
+    SELECT t.trip_id, t.trip_title, t.start_date, t.number_of_days, t.trip_progress
+    FROM trips t
+    LEFT JOIN trips_to_users ttu ON t.trip_id = ttu.trip_id
+    WHERE t.username = $1 OR ttu.username = $1;
+  `;
 
-db.any(query, [username])
-  .then(data => {
-    res.render('pages/allTrips', {
-      data: data
+  db.any(query, [username])
+    .then(data => {
+      res.render('pages/allTrips', { data: data });
+    })
+    .catch(err => {
+      console.error('Error fetching all trips:', err);
+      res.render('pages/allTrips', {
+        error: true,
+        message: "No data received"
+      });
     });
-  })
-  .catch(err => {
-    console.error('Error fetching all trips:', err);
-    res.render('pages/allTrips', {
-      error: true,
-      message: "No data received"
-    });
-  });
 });
 
 app.get('/createTrip', (req, res) => {
@@ -389,6 +387,36 @@ app.post('/trip/share',(req,res)=>{
     });
   })
 })
+
+app.get('/edit/:id', (req,res) => {
+  const id = req.params.id;
+  const q1 = `
+    SELECT * FROM trips 
+    WHERE trip_id = $1;
+  `;
+  const q2 = `
+    SELECT * FROM days
+    WHERE trip_id = $1;
+  `;
+
+  db.task('get-trip-details', task => {
+    return task.batch([task.any(q1, id), task.any(q2, id)]);
+  })
+  .then(data => {
+    res.render('/pages/tripEditDetails'), {
+      trip: data[0],
+      days: data[1],
+      message: "Trip data fetched"
+    }
+  })
+  .catch(err => {
+    res.render('pages/allTrips', {
+      error: true,
+      message: "Unable to fetch trip data",
+    })
+    console.log("ERROR");
+  })
+});
 
 app.get('/logout', (req, res) => {
   req.session.destroy();
