@@ -45,6 +45,7 @@ Handlebars.registerHelper('formatDateInput', function (date) {
 
 Handlebars.registerHelper('formatDateIncrement', function (date, index) {
   const d = new Date(date);
+  d.setDate(d.getDate() + index);
   const year = d.getFullYear();
   const month = String(d.getMonth() + 1).padStart(2, '0');
   const day = String(d.getDate()+ index).padStart(2, '0');
