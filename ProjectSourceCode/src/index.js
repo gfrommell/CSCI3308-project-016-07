@@ -428,7 +428,7 @@ app.get('/edit/:id/:day_id?', (req, res) => {
   let q2;
 
   
-    console.log("IN DAY ID")
+    // console.log("IN DAY ID")
     q2 = `
     SELECT DISTINCT days.*, trips.*, days_to_parks.park_code, parks.fullName
     FROM days 
@@ -446,7 +446,7 @@ app.get('/edit/:id/:day_id?', (req, res) => {
   })
   .then(data=>{
     
-    console.log(data[1]);
+    // console.log(data[1]);
     // console.log(data[2])
     res.render('pages/tripEditDetails',{
       trip: data[0],
@@ -550,7 +550,8 @@ app.route('/:trip_id/edit/:day_id')
     })
     .then(()=>{
 
-      res.redirect(`/${trip_id}/edit/${day_id}/${park_code}`)
+      // res.redirect(`/${trip_id}/edit/${day_id}/${park_code}`)
+      res.redirect(`/edit/${trip_id}/${day_id}`)
     })
 
   
@@ -563,25 +564,31 @@ app.get('/:trip_id/edit/:day_id/:park_code', (req, res) =>{
   const day_id = req.params.day_id;
   const park_code = req.params.park_code;
 
-  const query = `
-    SELECT activities FROM parks WHERE park_code = $1;
-  `
+  res.send(`This is the trip_id: ${trip_id}, day_id: ${day_id}, park_code: ${park_code}`)
+  // res.redirect(`/edit/${trip_id}/${day_id}`)
 
-  db.one(query, [park_code])
-  .then(data =>{
+  // const query = `
+  //   SELECT activities FROM parks WHERE park_code = $1;
+  // `
+
+  // db.one(query, [park_code])
+  // .then(data =>{
     
-    res.render('pages/activities',{
-      activity_data : data
-    })
-  })
-  .catch(err =>{
-    console.log(err)
-  })
+  //   res.render('pages/activities',{
+  //     activity_data : data
+  //   })
+  // })
+  // .catch(err =>{
+  //   console.log(err)
+  // })
 })
 
-app.post('/trip_id/edit/day_id/park_code/id', (req, res) =>{
+app.get('/trip_id/edit/day_id/park_code/id', (req, res) =>{
   // Add specific item to that day
+  
 })
+
+
 app.get('/logout', (req, res) => {
   req.session.destroy();
   res.render('pages/logout');

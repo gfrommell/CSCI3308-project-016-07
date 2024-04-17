@@ -21,11 +21,17 @@
                         <h4>Day {{this.day_number}}: {{formatDateIncrement this.start_date @index}} </h4>
                     </div>
 
-                    <div class="col-2 pb-2 d-inline">
-                        <form action="/{{this.trip_id}}/edit/{{this.day_id}}" method="get">
+                    <div class="col-4 pb-2 d-inline">
+                        <form class="row justify-content-center" action="#" method="get">
+                            {{#if this.park_code}}
                             
-                            <button class="btn btn-outline-dark">Add to day</button>
+                                <button formaction="/{{this.trip_id}}/edit/{{this.day_id}}" class="btn btn-outline-success col-4 mx-3">Change Park</button>
+                                <button formaction="/{{this.trip_id}}/edit/{{this.day_id}}/{{this.park_code}}" class="btn btn-outline-success col-4 ">Add Item</button>
+                            {{else}}
+                                <button formaction="/{{this.trip_id}}/edit/{{this.day_id}}" class="btn btn-outline-success col-4">Add a Park</button>
+                            {{/if}}
                         </form>
+                        
                     </div>
                 </div>
 
