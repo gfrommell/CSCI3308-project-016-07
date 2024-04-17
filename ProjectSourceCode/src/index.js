@@ -528,13 +528,28 @@ app.route('/:trip_id/edit/:day_id')
     const get_park_code = `
       SELECT park_code from parks WHERE fullName = $1;
     `
+
+    const check_query =   `
+      SELECT day_id from days_to_parks WHERE day_id = $1;
+    `
+
     const query = `
-    
       INSERT INTO days_to_parks (day_id, park_code) VALUES ($1, $2);
+    
     `
     db.task(async task =>{
       const park_code = await task.one(get_park_code, [park_name])
-      await task.none(query, [day_id, park_code.park_code ])
+      const check = await task.any(check_query,[day_id]);
+      if(check.length == 0){
+        console.log(check)
+        await task.none(query, [day_id, park_code.park_code ])
+      }
+      else{
+        await task.none(`DELETE FROM days_to_parks WHERE day_id = $1;`, [day_id])
+        await task.none(query, [day_id, park_code.park_code ])
+
+      }
+   
     })
     .then(()=>{
 
