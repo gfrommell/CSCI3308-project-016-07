@@ -131,7 +131,12 @@ app.get('/register', (req, res) => {
 app.get('/home', (req, res) => {
   if (req.session.user) {
 
-    const query = "SELECT trip_title, start_date , number_of_days, trip_progress FROM trips WHERE username = $1;";
+    const query = `
+  SELECT t.trip_id, t.trip_title, t.start_date, t.number_of_days, t.trip_progress
+  FROM trips t
+  LEFT JOIN trips_to_users ttu ON t.trip_id = ttu.trip_id
+  WHERE t.username = $1 OR ttu.username = $1;
+`;
 
     db.any(query, [user.username])
       .then(data => {
