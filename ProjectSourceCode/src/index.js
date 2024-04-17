@@ -439,11 +439,6 @@ app.get('/edit/:id/:day_id?', (req, res) => {
     ORDER BY days.day_id ASC;`;
 
     
-
-  // const q3 = `
-  //   SELECT parks.park_code from parks INNER JOIN days_to_parks as dtp ON dtp.park_code = parks.park_code INNER JOIN days ON days.day_id = dtp.day_id INNER JOIN trips ON ${id} = days.trip_id;
-  // `
-
   //TODO: more queries to get days_to : parks, events, things, tours, campgrounds
 
   db.task('get-trip-days', task => {
@@ -541,12 +536,12 @@ app.route('/:trip_id/edit/:day_id')
     `
     db.task(async task =>{
       const park_code = await task.one(get_park_code, [park_name])
-      const check = await task.any(check_query,[day_id]);
+      const check = await task.any(check_query,[day_id]); // check if day_id already exists
       if(check.length == 0){
-        await task.none(query, [day_id, park_code.park_code ])
+        await task.none(query, [day_id, park_code.park_code ]) // if day_id does not exist, insert the park_code
       }
       else{
-        await task.none(`UPDATE days_to_parks SET park_code = $1 WHERE day_id = $2;`, [park_code.park_code ,day_id])
+        await task.none(`UPDATE days_to_parks SET park_code = $1 WHERE day_id = $2;`, [park_code.park_code ,day_id]) //update the park_code if day_id already exists
       }
    
     })
