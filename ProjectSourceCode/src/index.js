@@ -231,7 +231,10 @@ app.get('/alltrips', (req, res) => {
 
   db.any(query, [username])
     .then(data => {
-      res.render('pages/allTrips', { data: data });
+      console.log(data);
+      res.render('pages/allTrips', { 
+        data: data 
+      });
     })
     .catch(err => {
       console.error('Error fetching all trips:', err);
@@ -400,22 +403,22 @@ app.get('/edit/:id', (req,res) => {
   `;
 
   db.task('get-trip-details', task => {
-    return task.batch([task.any(q1, id), task.any(q2, id)]);
+    return task.batch([task.any(q1, [id]), task.any(q2, [id])]);
   })
   .then(data => {
-    res.render('/pages/tripEditDetails'), {
+    res.render('pages/tripEditDetails', {
       trip: data[0],
       days: data[1],
-      message: "Trip data fetched"
-    }
+      message: "Trip data fetched",
+    });
   })
   .catch(err => {
     res.render('pages/allTrips', {
       error: true,
       message: "Unable to fetch trip data",
-    })
+    });
     console.log("ERROR");
-  })
+  });
 });
 
 app.get('/logout', (req, res) => {
