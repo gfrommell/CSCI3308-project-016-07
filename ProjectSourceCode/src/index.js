@@ -252,25 +252,26 @@ app.get('/alltrips', (req, res) => {
   const username = user.username;
 
   const query = `
-  SELECT t.trip_id, t.trip_title, t.start_date, t.number_of_days, t.trip_progress
-  FROM trips t
-  LEFT JOIN trips_to_users ttu ON t.trip_id = ttu.trip_id
-  WHERE t.username = $1 OR ttu.username = $1;
-`;
+    SELECT t.trip_id, t.trip_title, t.start_date, t.number_of_days, t.trip_progress
+    FROM trips t
+    LEFT JOIN trips_to_users ttu ON t.trip_id = ttu.trip_id
+    WHERE t.username = $1 OR ttu.username = $1;
+  `;
 
-db.any(query, [username])
-  .then(data => {
-    res.render('pages/allTrips', {
-      data: data
+  db.any(query, [username])
+    .then(data => {
+      console.log(data);
+      res.render('pages/allTrips', { 
+        data: data 
+      });
+    })
+    .catch(err => {
+      console.error('Error fetching all trips:', err);
+      res.render('pages/allTrips', {
+        error: true,
+        message: "No data received"
+      });
     });
-  })
-  .catch(err => {
-    console.error('Error fetching all trips:', err);
-    res.render('pages/allTrips', {
-      error: true,
-      message: "No data received"
-    });
-  });
 });
 
 app.get('/createTrip', (req, res) => {
