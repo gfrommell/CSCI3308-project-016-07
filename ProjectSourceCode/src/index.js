@@ -249,21 +249,28 @@ app.use(auth);
 
 app.get('/alltrips', (req, res) => {
 
-  const query = 'SELECT trip_id, trip_title, start_date, number_of_days, trip_progress FROM trips WHERE username = $1;';
+  const username = user.username;
 
-  db.any(query, [user.username])
-    .then(data => {
-      //res.status(200);
-      res.render('pages/allTrips', {
-        data: data
-      })
-    })
-    .catch(err => {
-      res.render('pages/allTrips', {
-        error: true,
-        message: "No data received"
-      })
-    })
+  const query = `
+  SELECT t.trip_id, t.trip_title, t.start_date, t.number_of_days, t.trip_progress
+  FROM trips t
+  LEFT JOIN trips_to_users ttu ON t.trip_id = ttu.trip_id
+  WHERE t.username = $1 OR ttu.username = $1;
+`;
+
+db.any(query, [username])
+  .then(data => {
+    res.render('pages/allTrips', {
+      data: data
+    });
+  })
+  .catch(err => {
+    console.error('Error fetching all trips:', err);
+    res.render('pages/allTrips', {
+      error: true,
+      message: "No data received"
+    });
+  });
 });
 
 app.get('/createTrip', (req, res) => {
@@ -274,8 +281,7 @@ app.get('/createTrip', (req, res) => {
 
 app.get('/notifications', (req, res) => {
   const username = user.username;
-  const query = `
-  SELECT * FROM notifications WHERE receiver_username = $1;`;
+  const query = `SELECT * FROM notifications WHERE receiver_username = $1 AND status IS NOT TRUE AND status IS NOT FALSE`;
 
   db.any(query,username)
   .then(data=>{
@@ -293,6 +299,39 @@ app.get('/notifications', (req, res) => {
   })
 });
 
+app.post('/notifications/accepted', async (req, res) => {
+  console.log('Request Body:', req.body);
+  const { notificationId, receiverUsername, tripID } = req.body;
+  try {
+    await db.task(async task => {
+      const insertQuery = 'INSERT INTO trips_to_users (trip_id, username) VALUES ($1, $2)';
+      await task.none(insertQuery, [tripID, receiverUsername]);
+      const updateQuery = 'UPDATE notifications SET status = true WHERE notifications_id = $1';
+      await task.none(updateQuery, [notificationId]);
+    });
+    res.send({ success: true, message: 'Accepted' });
+  } 
+  catch (error) {
+    console.error('Error:', error);
+    res.status(500).send({ success: false, message: 'Error processing your request', error: error.message });
+  }
+});
+
+
+app.post('/notifications/declined', async (req, res) => {
+  const { notificationId } = req.body;
+  try {
+    await db.task(async task => {
+      const updateQuery = 'UPDATE notifications SET status = false WHERE notifications_id = $1';
+      await task.none(updateQuery, [notificationId]);
+    });
+    res.send({ success: true, message: 'Declined' });
+  } 
+  catch (error) {
+    console.error('Error:', error);
+    res.status(500).send({ success: false, message: 'Error processing your request', error: error.message });
+  }
+});
 
 
 
