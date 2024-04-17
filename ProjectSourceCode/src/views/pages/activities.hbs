@@ -10,7 +10,7 @@
 
 
 
-{{!-- {{#if data}}
+{{#if activity_data}}
 <table class="table">
     <tr>
 
@@ -18,19 +18,19 @@
         <th></th>
 
     </tr>
-    {{#each data.activities}}
+    {{#each activity_data.activities}}
     <tr>
         <td>
             {{this.name}}
         </td>
         <td width="150" >
             <form action="/trip_id/edit/day_id/park_code" method="post">
-                <button class="btn btn-outline-success" name="id" value="{{this.trip_id}}">Add to Day</button>
+                <button class="btn btn-outline-success" name="id" value="{{this.trip_id}}">Add</button>
             </form>
         </td>
     </tr>
     {{/each}}
 </table>
   
-{{/if}} --}}
+{{/if}}
 

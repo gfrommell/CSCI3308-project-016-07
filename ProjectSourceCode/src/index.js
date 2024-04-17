@@ -521,6 +521,7 @@ app.route('/:trip_id/edit/:day_id')
     const park_name = req.body.park_name;
     const trip_id = req.params.trip_id;
     const day_id = req.params.day_id;
+    let park_code;
     
     const get_park_code = `
       SELECT park_code from parks WHERE fullName = $1;
@@ -535,30 +536,47 @@ app.route('/:trip_id/edit/:day_id')
     
     `
     db.task(async task =>{
-      const park_code = await task.one(get_park_code, [park_name])
+      let {park_code: pc} = await task.one(get_park_code, [park_name])
+      park_code = pc
+      
       const check = await task.any(check_query,[day_id]); // check if day_id already exists
       if(check.length == 0){
-        await task.none(query, [day_id, park_code.park_code ]) // if day_id does not exist, insert the park_code
+        await task.none(query, [day_id, park_code ]) // if day_id does not exist, insert the park_code
       }
       else{
-        await task.none(`UPDATE days_to_parks SET park_code = $1 WHERE day_id = $2;`, [park_code.park_code ,day_id]) //update the park_code if day_id already exists
+        await task.none(`UPDATE days_to_parks SET park_code = $1 WHERE day_id = $2;`, [park_code ,day_id]) //update the park_code if day_id already exists
       }
    
     })
     .then(()=>{
 
-      res.redirect(`/edit/${trip_id}/${day_id}`)
+      res.redirect(`/${trip_id}/edit/${day_id}/${park_code}`)
     })
 
   
  
   })
 
-app.post('/trip_id/edit/day_id/park_code', (req, res) =>{
+app.get('/:trip_id/edit/:day_id/:park_code', (req, res) =>{
  // Render everything associated with activities or events
-  const id = req.body.id;
-  console.log(id)
-  res.redirect('/home')
+  const trip_id = req.params.trip_id;
+  const day_id = req.params.day_id;
+  const park_code = req.params.park_code;
+
+  const query = `
+    SELECT activities FROM parks WHERE park_code = $1;
+  `
+
+  db.one(query, [park_code])
+  .then(data =>{
+    
+    res.render('pages/activities',{
+      activity_data : data
+    })
+  })
+  .catch(err =>{
+    console.log(err)
+  })
 })
 
 app.post('/trip_id/edit/day_id/park_code/id', (req, res) =>{
