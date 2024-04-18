@@ -1,23 +1,33 @@
-<div class="container">
-
-    <table class="table">
-        <thead>
-            <tr>
-                <th scope="col">Trip Name</th>
-                <th scope="col">Trip Date</th>
-                <th scope="col">Duration</th>
-                <th scope="col">Progress</th>
-            </tr>
-        </thead>
-        <tbody>
-            {{#each data}}
-            <tr>
-                <td>{{this.trip_title}}</td>
-                <td>{{formatDate this.start_date}}</td>
-                <td>{{this.number_of_days}}</td>
-                <td>{{this.trip_progress}}</td>
-            </tr>
-            {{/each}}
-        </tbody>
-    </table>
-</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+        section {
+            padding: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Parks and Road Trips</h1>
+    </header>
+    <section>
+        <h2>Welcome!</h2>
+        <p>Thank you for visiting our website!</p>
+    </section>
+</body>
+</html>
