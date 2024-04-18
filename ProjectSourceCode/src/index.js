@@ -826,6 +826,23 @@ app.post('/insert-campground/:day_id/:campground_id', (req, res) =>{
   
 })
 
+app.post('/insert-tour/:day_id/:tour_id', (req, res) =>{
+  // Add specific item to that day
+  const day_id = req.params.day_id
+  const tour_id = req.params.tour_id;
+  const query =
+  `INSERT INTO days_to_tours (day_id, tour_id) VALUES ($1, $2)`
+
+  db.none(query, [day_id, tour_id])
+  .then(()=>[
+    res.redirect('/home')
+  ])
+  .catch(err=>{
+    console.log("insert items error")
+  })
+  
+})
+
 
 app.get('/logout', (req, res) => {
   req.session.destroy();
