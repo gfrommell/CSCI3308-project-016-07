@@ -13,7 +13,7 @@
                     {{this.title}}
                 </td>
                 <td width="150">
-                    <form action="/insert/{{../day_id}}/{{this.event_id}}" method="post">
+                    <form action="/insert-event/{{../day_id}}/{{this.event_id}}" method="post">
  
                         <button class="btn btn-outline-success">Add</button>
                     </form>
@@ -44,8 +44,8 @@
             <td width="150">
               
 
-                    <form action="/home/{{this.campground_id}}">
-
+                    <form action="/insert-campground/{{../day_id}}/{{this.campground_id}}" method="post">
+ 
                         <button class="btn btn-outline-success">Add</button>
                     </form>
                 

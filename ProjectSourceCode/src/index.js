@@ -664,7 +664,7 @@ app.get('/:trip_id/edit/:day_id/:park_code', (req, res) =>{
   
 })
 
-app.post('/insert/:day_id/:event_id', (req, res) =>{
+app.post('/insert-event/:day_id/:event_id', (req, res) =>{
   // Add specific item to that day
   const day_id = req.params.day_id
   const event_id = req.params.event_id;
@@ -672,6 +672,23 @@ app.post('/insert/:day_id/:event_id', (req, res) =>{
   `INSERT INTO days_to_events (day_id, event_id) VALUES ($1, $2)`
 
   db.none(query, [day_id, event_id])
+  .then(()=>[
+    res.redirect('/home')
+  ])
+  .catch(err=>{
+    console.log("insert items error")
+  })
+  
+})
+
+app.post('/insert-campground/:day_id/:campground_id', (req, res) =>{
+  // Add specific item to that day
+  const day_id = req.params.day_id
+  const campground_id = req.params.campground_id;
+  const query =
+  `INSERT INTO days_to_campgrounds (campground_id, day_id) VALUES ($1, $2)`
+
+  db.none(query, [campground_id, day_id])
   .then(()=>[
     res.redirect('/home')
   ])
