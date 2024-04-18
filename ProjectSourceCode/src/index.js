@@ -28,6 +28,14 @@ const hbs = handlebars.create({
   partialsDir: __dirname + '/views/partials',
 });
 
+Handlebars.registerHelper('getFirstImage', function (images) {
+  if(images == undefined){
+    return;
+  } else {
+    return images[0];
+  }
+});
+
 Handlebars.registerHelper('formatDate', function (date) {
   const d = new Date(date);
   const year = d.getFullYear();
@@ -251,7 +259,7 @@ app.post('/login', (req, res) => {
 //Explore Parks 
 app.get('/exploreParks/:keyword', (req, res) => {
 
-  var q1 = `Select park_code, fullName, states, json_array_elements(parks.images)->>'url' FROM parks LIMIT 12;`;
+  var q1 = `Select park_code, fullName, states, images, url FROM parks LIMIT 12;`;
   const key = req.params.keyword;
 
   if(key == 'none'){

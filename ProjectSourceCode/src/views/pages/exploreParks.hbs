@@ -15,7 +15,9 @@
             {{#each data}}
             <div class="col-md-4 mb-4">
                 <div class="card">
-                    <img class="card-img-top" src="{{this.?column?}}" alt="Event Image">
+                    {{#with (getFirstImage this.images) as | image | }}
+                    <img class="card-img-top" src="{{image.url}}" alt="Event Image">
+                    {{/with}}
                     <div class="card-body">
                         <h5 class="card-title">{{this.fullname}}</h5>
                         <p class="card-text">Location: {{this.states}} <br> Park Code: {{this.park_code}}</p>
