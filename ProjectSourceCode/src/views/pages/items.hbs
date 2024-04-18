@@ -12,7 +12,12 @@
 
                     {{this.title}}
                 </td>
-                <td width = "150"><button class="btn btn-outline-success">Add</button></td>
+                <td width="150">
+                    <form action="/home/{{this.event_id}}">
+
+                        <button class="btn btn-outline-success">Add</button>
+                    </form>
+                </td>
             </tr>
            
         {{/each}}
@@ -36,7 +41,15 @@
             <td> 
 
                 {{this.name}}
-                <td width="150"><button class="btn btn-outline-success">Add</button></td>
+            <td width="150">
+              
+
+                    <form action="/home/{{this.campground_id}}">
+
+                        <button class="btn btn-outline-success">Add</button>
+                    </form>
+                
+            </td>
             </td>
         </tr>
         {{/each}}
@@ -63,7 +76,16 @@
             <tr>
                 <td>
                     {{this.title}}
-                    <td width="150"><button class="btn btn-outline-success">Add</button></td>
+
+                <td width="150">
+                    
+
+                    <form action="/home/{{this.tour_id}}">
+
+                        <button class="btn btn-outline-success">Add</button>
+                    </form>
+                    
+                </td>
                 </td>
             </tr>
         {{/each}}
