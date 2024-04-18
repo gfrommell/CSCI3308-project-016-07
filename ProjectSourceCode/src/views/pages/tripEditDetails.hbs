@@ -25,8 +25,8 @@
                         <form class="row justify-content-center" action="#" method="get">
                             {{#if onePark.park_code}}
                             
-                                <button formaction="/{{trip.trip_id}}/edit/{{oneParks.day_id}}" class="btn btn-outline-success col-4 mx-3">Change Park</button>
-                                <button formaction="/{{trip.trip_id}}/edit/{{onePark.day_id}}/{{onePark.park_code}}" class="btn btn-outline-success col-4 ">Add Item</button>
+                                <button formaction="/{{onePark.trip_id}}/edit/{{onePark.day_id}}" class="btn btn-outline-success col-4 mx-3">Change Park</button>
+                                <button formaction="/{{onePark.trip_id}}/edit/{{onePark.day_id}}/{{onePark.park_code}}" class="btn btn-outline-success col-4 ">Add Item</button>
                             {{else}}
                                 <button formaction="/{{onePark.trip_id}}/edit/{{onePark.day_id}}" class="btn btn-outline-success col-4">
                                  Add to Park
@@ -45,7 +45,7 @@
                     {{/with}}
 
                     <tr>
-                        <th><strong>Items scheduled</strong></th>
+                        <th><strong>Events</strong></th>
                         {{#with (eventForDay events @index) as | event |}}
                             {{#each event}}
                             <tr>
@@ -54,6 +54,38 @@
                             {{/each}}
                          
                         {{/with}}
+
+                        <th><strong>Tours</strong></th>
+                        {{#with (toursForDay tours @index) as | tour |}}
+                            {{#each tour}}
+                            <tr>
+                                <td>{{this.title}}</td>
+                            </tr>
+                            {{/each}}
+                         
+                        {{/with}}
+
+                        <th><strong>Things to do</strong></th>
+                        {{#with (thingsForDay things @index) as | thing |}}
+                            {{#each thing}}
+                            <tr>
+                                <td>{{this.title}}</td>
+                            </tr>
+                            {{/each}}
+                         
+                        {{/with}}
+
+                        <th><strong>Campgrounds</strong></th>
+                        {{#with (campsForDay camps @index) as | camp |}}
+                            {{#each camp}}
+                            <tr>
+                                <td>{{this.name}}</td>
+                            </tr>
+                            {{/each}}
+                         
+                        {{/with}}
+
+
                     </tr>
 
                 </table>
