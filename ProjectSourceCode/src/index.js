@@ -636,13 +636,13 @@ app.get('/:trip_id/edit/:day_id/:park_code', (req, res) =>{
   const day_id = req.params.day_id;
   const park_code = req.params.park_code;
   const q1 = `
-    SELECT title FROM events WHERE park_code = $1;
+    SELECT title, event_id FROM events WHERE park_code = $1;
   `
   const q2 =`
-  SELECT name FROM campgrounds WHERE park_code = $1;
+  SELECT name, campground_id FROM campgrounds WHERE park_code = $1;
   ` 
   const q3 =`
-    SELECT title FROM tours WHERE park_code = $1;
+    SELECT title, tour_id FROM tours WHERE park_code = $1;
   `
 
   db.task(async task =>{
