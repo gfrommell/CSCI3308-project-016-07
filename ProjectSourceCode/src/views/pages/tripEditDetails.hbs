@@ -1,77 +1,77 @@
 <div class="container">
   
-    {{#each trip}}
+   
 
-        <h1>{{this.trip_title}}</h1>
+        <h1 class="pt-3 color-eggplant">{{trip.trip_title}}</h1>
 
-        <div class="row">
-            <div class="col p-2 d-inline">Start Date: {{formatDate this.start_date}}</div>
-            <div class="col p-2 d-inline">Duration: {{this.number_of_days}} days</div>
-            <div class="col p-2 d-inline"><button data-bs-toggle="modal" data-bs-target="#edit-modal-{{this.trip_id}}" type="button" id="{{this.trip_id}}" class="edit btn btn-outline-dark">Edit trip details</button>  </div>
-
+        <div class="row pb-3 px-2 justify-content-between">
+            <div class="col-4 p-2 d-inline">Start Date: {{formatDate trip.start_date}}</div>
+            <div class="col-4 p-2 d-inline">Duration: {{trip.number_of_days}} days</div>
+            <div class="col-2 p-2 d-inline">
+                <button data-bs-toggle="modal" data-bs-target="#edit-modal-{{trip.trip_id}}" type="button" id="{{trip.trip_id}}" class="edit btn btn-dark">Edit trip details</button>
+            </div>
         </div>
 
 
-        
+        {{#each days}}
 
-        {{#times this.number_of_days}}
-
-            <div> 
-                <div class="row"> 
-                    <div class="col p-2 d-inline" >
-                        <h4>Day {{@index}}: {{formatDateIncrement this.start_date @index}} </h4>
+           
+            
+            <div class="mb-5 shadow p-3 bg-body-tertiary rounded"> 
+                <div class="row justify-content-between"> 
+                    <div class="col-4 pb-2 d-inline" >
+                        <h4>Day {{this.day_number}}: {{formatDateIncrement this.start_date @index}} </h4>
                     </div>
 
-                    <div class="col p-2 d-inline">
-                        <form action="/{{this.trip_id}}/edit/{{@index}}" method="get">
+                    <div class="col-4 pb-2 d-inline">
+                        <form class="row justify-content-center" action="#" method="get">
+                            {{#if this.park_code}}
                             
-                            <button class="btn btn-outline-dark">Add to day</button>
+                                <button formaction="/{{this.trip_id}}/edit/{{this.day_id}}" class="btn btn-outline-success col-4 mx-3">Change Park</button>
+                                <button formaction="/{{this.trip_id}}/edit/{{this.day_id}}/{{this.park_code}}" class="btn btn-outline-success col-4 ">Add Item</button>
+                            {{else}}
+                                <button formaction="/{{this.trip_id}}/edit/{{this.day_id}}" class="btn btn-outline-success col-4">Add a Park</button>
+                            {{/if}}
                         </form>
+                        
                     </div>
                 </div>
 
-                <table>
+                <table class="table table-light table-borderless">
 
                     <tr>
-                        <th>Park</th>
+                        <th><strong>Park: {{this.fullname}}</strong></th>
                     </tr>
 
 
                     <tr>
-                        <th>Items scheduled</th>
+                        <th><strong>Items scheduled</strong></th>
                     </tr>
 
                 </table>
 
             </div>
-        {{/times}}
 
-
-
-
-
-
-
-    <!--EDIT Trip title, start date, and duration-->
+            
         <div id="edit-modal-{{this.trip_id}}" class="modal" tabindex="-1" role="dialog" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title">Edit trip details</h5>
+                                <h5 class="modal-title">Edit this details</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                                <form action="/tripEdit" method="post">
+                                <form action="/createTrip" method="post">
 
 
                              
                                     <label for="titleEdit">Title</label>
-                                    <input class="form-control" type="text" name="title" id="titleEdit" placeholder="{{trip_title}}">
+                                    <input class="form-control" type="text" name="title" id="titleEdit" placeholder="{{trip_title}}" value="{{this.trip_title}}">
                                     
                                     <div class="row my-2">
                                         <div class="col-6">
                                             <label for="startdateEdit">Start Date</label>
-                                            <input class="form-control" type="date" name="startdate" id="startdateEdit" value="{{formatDateInput start_date}}">
+                                            <input class="form-control" type="date" name="startdate" id="startdateEdit" value="{{formatDateInput start_date}}" >
                                         </div>
                                         <div class="col-6">
                                             <label for="numdaysEdit">Number of Days</label>
@@ -87,8 +87,12 @@
                         </div>
                     </div>
                 </div>
+        {{/each}}
 
-    {{/each}}
+
+    <!--EDIT Trip title, start date, and duration-->
+
+
 
 
 

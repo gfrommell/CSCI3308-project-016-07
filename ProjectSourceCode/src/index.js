@@ -13,6 +13,7 @@ const session = require('express-session'); // To set the session object. To sto
 const bcrypt = require('bcrypt'); //  To hash passwords
 const axios = require('axios'); // To make HTTP requests from our server. We'll learn more about it in Part C.
 const { error } = require('console');
+const { lutimes } = require('fs');
 
 
 
@@ -249,21 +250,29 @@ app.use(auth);
 
 app.get('/alltrips', (req, res) => {
 
-  const query = 'SELECT trip_id, trip_title, start_date, number_of_days, trip_progress FROM trips WHERE username = $1;';
+  const username = user.username;
 
-  db.any(query, [user.username])
+  const query = `
+    SELECT t.trip_id, t.trip_title, t.start_date, t.number_of_days, t.trip_progress
+    FROM trips t
+    LEFT JOIN trips_to_users ttu ON t.trip_id = ttu.trip_id
+    WHERE t.username = $1 OR ttu.username = $1;
+  `;
+
+  db.any(query, [username])
     .then(data => {
-      //res.status(200);
-      res.render('pages/allTrips', {
-        data: data
-      })
+      console.log(data);
+      res.render('pages/allTrips', { 
+        data: data 
+      });
     })
     .catch(err => {
+      console.error('Error fetching all trips:', err);
       res.render('pages/allTrips', {
         error: true,
         message: "No data received"
-      })
-    })
+      });
+    });
 });
 
 app.get('/createTrip', (req, res) => {
@@ -274,8 +283,7 @@ app.get('/createTrip', (req, res) => {
 
 app.get('/notifications', (req, res) => {
   const username = user.username;
-  const query = `
-  SELECT * FROM notifications WHERE receiver_username = $1;`;
+  const query = `SELECT * FROM notifications WHERE receiver_username = $1 AND status IS NOT TRUE AND status IS NOT FALSE`;
 
   db.any(query,username)
   .then(data=>{
@@ -293,6 +301,39 @@ app.get('/notifications', (req, res) => {
   })
 });
 
+app.post('/notifications/accepted', async (req, res) => {
+  console.log('Request Body:', req.body);
+  const { notificationId, receiverUsername, tripID } = req.body;
+  try {
+    await db.task(async task => {
+      const insertQuery = 'INSERT INTO trips_to_users (trip_id, username) VALUES ($1, $2)';
+      await task.none(insertQuery, [tripID, receiverUsername]);
+      const updateQuery = 'UPDATE notifications SET status = true WHERE notifications_id = $1';
+      await task.none(updateQuery, [notificationId]);
+    });
+    res.send({ success: true, message: 'Accepted' });
+  } 
+  catch (error) {
+    console.error('Error:', error);
+    res.status(500).send({ success: false, message: 'Error processing your request', error: error.message });
+  }
+});
+
+
+app.post('/notifications/declined', async (req, res) => {
+  const { notificationId } = req.body;
+  try {
+    await db.task(async task => {
+      const updateQuery = 'UPDATE notifications SET status = false WHERE notifications_id = $1';
+      await task.none(updateQuery, [notificationId]);
+    });
+    res.send({ success: true, message: 'Declined' });
+  } 
+  catch (error) {
+    console.error('Error:', error);
+    res.status(500).send({ success: false, message: 'Error processing your request', error: error.message });
+  }
+});
 
 
 
@@ -301,6 +342,8 @@ app.post("/createTrip", (req, res) => {
   const startdate = req.body.startdate;
   const numDays = req.body.numdays;
   const username = user.username;
+  const trip_id = req.body.trip_id
+  let last_record;
   if (!username) {
     res.status(400).send("How did you even get this far without logging in???")
   }
@@ -321,6 +364,13 @@ app.post("/createTrip", (req, res) => {
   db.task(async task => {
     // result will have trip_id and number_of_days
     const result = await task.one(queryTrips, [title, startdate, numDays, username, trip_progress]);
+    if(trip_id){
+
+      await task.none(`DELETE FROM trips WHERE trip_id = $1`, [trip_id])
+      last_record = await task.one(`SELECT trip_id FROM trips ORDER BY trip_id DESC LIMIT 1;`)
+      
+    }
+    
     for (let i = 1; i <= numDays; i++) {
 
       await task.none(queryDays, [i, result.trip_id])
@@ -329,7 +379,20 @@ app.post("/createTrip", (req, res) => {
 
   })
     .then(data => {
-      res.redirect('/home');
+      if(trip_id){
+        res.redirect(`/edit/${last_record.trip_id}`)
+      }
+      else{
+
+        res.redirect('/home');
+      }
+      
+
+        
+      
+      // else{
+      //   res.redirect(`/edit/${last_record.trip_id}`)
+      // }
     })
     .catch(err => {
       res.redirect('/createTrip', {
@@ -381,23 +444,47 @@ app.post('/tripShare',(req,res)=>{
 });
 
 
-app.get('/edit/:id', (req, res) => {
+app.get('/edit/:id/:day_id?', (req, res) => {
   const id = req.params.id;
+  const day_id = req.params.day_id;
   const query = `
   SELECT * FROM trips WHERE trip_id = $1;`;
+  let q2;
+  const limit_query = 
+  `
+    SELECT number_of_days from trips WHERE trip_id = $1;
+  `
+
   
-  const q2 = `SELECT * FROM days WHERE trip_id = $1;`;
-
-  //TODO: more queries to get days_to : parks, events, things, tours, campgrounds
-
-  db.task('get-trip-days', task => {
-    return task.batch([task.any(query, id), task.any(q2, id)]);
+    // console.log("IN DAY ID")
+    
+    
+    //TODO: more queries to get days_to : parks, events, things, tours, campgrounds
+    
+  db.task('get-trip-days',  async task => {
+    const {number_of_days} = await task.one(limit_query, [id])
+    const limit = number_of_days
+    console.log(limit)
+    q2 = `
+    SELECT DISTINCT days.*, trips.*, days_to_parks.park_code, parks.fullName
+    FROM days 
+    INNER JOIN trips ON days.trip_id = trips.trip_id 
+    LEFT JOIN days_to_parks ON days.day_id = days_to_parks.day_id 
+    LEFT JOIN parks ON parks.park_code = days_to_parks.park_code
+    WHERE trips.trip_id = $1
+    ORDER BY days.day_id ASC
+    LIMIT ${limit};`;
+    return await task.batch([task.one(query, id), task.any(q2, id)]);
   })
   .then(data=>{
-    console.log(data[1]);
+    
+    // console.log(data[1]);
+    // console.log(data[2])
     res.render('pages/tripEditDetails',{
       trip: data[0],
       days: data[1],
+
+      
       message: "Fetched data"
     })
   })
@@ -412,6 +499,7 @@ app.get('/edit/:id', (req, res) => {
 
 app.post('/tripEdit', (req, res) => {
   const id = req.body.trip_id;
+  // const 
   var q1 = '';
   var q2 = '';
   var q3 = '';
@@ -453,52 +541,87 @@ app.post('/tripEdit', (req, res) => {
 app.route('/:trip_id/edit/:day_id')
   // Render a list of activites associated with a park? Or is it just a search bar and stuff?
   .get((req, res) =>{
-    // const id = req.params.id;
-    // const query = `
-    // SELECT * FROM trips WHERE trip_id = $1;`;
-    res.render('pages/activities')
+    const data = {
+      day_id : req.params.day_id,
+      trip_id : req.params.trip_id
+    }
+    res.render('pages/activities',{data})
   })
 
 
   .post((req, res) =>{ //! insert into the days_to_parks
 
     const park_name = req.body.park_name;
-    // const query = `
-    //   INSERT INTO days_to_parks (day_id, park_code) VALUES ()
-    // `
-    console.log(req.params.day_id)
-    console.log(park_name)
-    res.redirect('/edit/:id')
+    const trip_id = req.params.trip_id;
+    const day_id = req.params.day_id;
+    let park_code;
+    
+    const get_park_code = `
+      SELECT park_code from parks WHERE fullName = $1;
+    `
 
-    // const park_name = req.body.park_name; //NOTE: might need to change this, as button could return park Id it self
-    // const park_code = `
-    //   SELECT park_code, activities from parks where fullName = '${park_name}';
-    // `
-    // db.one(park_code)
-    // .then(data =>{
-    //   console.log(data)
+    const check_query =   `
+      SELECT day_id from days_to_parks WHERE day_id = $1;
+    `
+
+    const query = `
+      INSERT INTO days_to_parks (day_id, park_code) VALUES ($1, $2);
+    
+    `
+    db.task(async task =>{
+      let {park_code: pc} = await task.one(get_park_code, [park_name])
+      park_code = pc
       
-    //   res.render('pages/activities',{
-    //     data
-    //   })
-    // })
-    // .catch(err =>{
-    //   console.log(err);
-    //   console.log("Error trying to get park_code")
-    // })
+      const check = await task.any(check_query,[day_id]); // check if day_id already exists
+      if(check.length == 0){
+        await task.none(query, [day_id, park_code ]) // if day_id does not exist, insert the park_code
+      }
+      else{
+        await task.none(`UPDATE days_to_parks SET park_code = $1 WHERE day_id = $2;`, [park_code ,day_id]) //update the park_code if day_id already exists
+      }
+   
+    })
+    .then(()=>{
 
+      // res.redirect(`/${trip_id}/edit/${day_id}/${park_code}`)
+      res.redirect(`/edit/${trip_id}/${day_id}`)
+    })
+
+  
+ 
   })
 
-app.post('/trip_id/edit/day_id/park_code', (req, res) =>{
+app.get('/:trip_id/edit/:day_id/:park_code', (req, res) =>{
  // Render everything associated with activities or events
-  const id = req.body.id;
-  console.log(id)
-  res.redirect('/home')
+  const trip_id = req.params.trip_id;
+  const day_id = req.params.day_id;
+  const park_code = req.params.park_code;
+
+  res.send(`This is the trip_id: ${trip_id}, day_id: ${day_id}, park_code: ${park_code}`)
+  // res.redirect(`/edit/${trip_id}/${day_id}`)
+
+  // const query = `
+  //   SELECT activities FROM parks WHERE park_code = $1;
+  // `
+
+  // db.one(query, [park_code])
+  // .then(data =>{
+    
+  //   res.render('pages/activities',{
+  //     activity_data : data
+  //   })
+  // })
+  // .catch(err =>{
+  //   console.log(err)
+  // })
 })
 
-app.post('/trip_id/edit/day_id/park_code/id', (req, res) =>{
+app.get('/trip_id/edit/day_id/park_code/id', (req, res) =>{
   // Add specific item to that day
+  
 })
+
+
 app.get('/logout', (req, res) => {
   req.session.destroy();
   res.render('pages/logout');
