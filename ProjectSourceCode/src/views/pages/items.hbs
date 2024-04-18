@@ -15,7 +15,7 @@
                 <td width="150">
                     <form action="/insert-event/{{../day_id}}/{{this.event_id}}" method="post">
  
-                        <button class="btn btn-outline-success">Add</button>
+                         <button name="trip_id" value="{{../trip_id}}" class="btn btn-outline-success">Add</button>
                     </form>
                 </td>
             </tr>
@@ -47,7 +47,7 @@
 
                     <form action="/insert-campground/{{../day_id}}/{{this.campground_id}}" method="post">
  
-                        <button class="btn btn-outline-success">Add</button>
+                         <button name="trip_id" value="{{../trip_id}}" class="btn btn-outline-success">Add</button>
                     </form>
                 
             </td>
@@ -83,7 +83,7 @@
 
                     <form action="/insert-tour/{{../day_id}}/{{this.tour_id}}" method="post">
  
-                        <button class="btn btn-outline-success">Add</button>
+                        <button name="trip_id" value="{{../trip_id}}" class="btn btn-outline-success">Add</button>
                     </form>
                     
                 </td>

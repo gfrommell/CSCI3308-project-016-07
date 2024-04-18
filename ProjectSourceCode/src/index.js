@@ -777,12 +777,12 @@ app.get('/:trip_id/edit/:day_id/:park_code', (req, res) =>{
     return await task.batch([task.any(q1, park_code), task.any(q2, park_code), task.any(q3, park_code)]);
   })
   .then(data =>{
-    console.log(data[2])
     res.render('pages/items',{
       events:data[0],
       campgrounds:data[1],
       tours: data[2],
-      day_id :day_id
+      day_id :day_id,
+      trip_id :trip_id
 
     })
   })
@@ -796,12 +796,13 @@ app.post('/insert-event/:day_id/:event_id', (req, res) =>{
   // Add specific item to that day
   const day_id = req.params.day_id
   const event_id = req.params.event_id;
+  const trip_id = req.body.trip_id;
   const query =
   `INSERT INTO days_to_events (day_id, event_id) VALUES ($1, $2)`
 
   db.none(query, [day_id, event_id])
   .then(()=>[
-    res.redirect('/home')
+    res.redirect(`/edit/${trip_id}`)
   ])
   .catch(err=>{
     console.log("insert items error")
@@ -813,12 +814,13 @@ app.post('/insert-campground/:day_id/:campground_id', (req, res) =>{
   // Add specific item to that day
   const day_id = req.params.day_id
   const campground_id = req.params.campground_id;
+  const trip_id = req.body.trip_id;
   const query =
   `INSERT INTO days_to_campgrounds (campground_id, day_id) VALUES ($1, $2)`
 
   db.none(query, [campground_id, day_id])
   .then(()=>[
-    res.redirect('/home')
+    res.redirect(`/edit/${trip_id}`)
   ])
   .catch(err=>{
     console.log("insert items error")
@@ -830,12 +832,13 @@ app.post('/insert-tour/:day_id/:tour_id', (req, res) =>{
   // Add specific item to that day
   const day_id = req.params.day_id
   const tour_id = req.params.tour_id;
+  const trip_id = req.body.trip_id;
   const query =
   `INSERT INTO days_to_tours (day_id, tour_id) VALUES ($1, $2)`
 
   db.none(query, [day_id, tour_id])
   .then(()=>[
-    res.redirect('/home')
+    res.redirect(`/edit/${trip_id}`)
   ])
   .catch(err=>{
     console.log("insert items error")
