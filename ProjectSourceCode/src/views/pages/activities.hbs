@@ -1,0 +1,39 @@
+<h1>
+    Enter a park name
+</h1>
+<form class="mx-5" action="/{{data.trip_id}}/edit/{{data.day_id}}" method="post">
+
+    <input class="form-control w-25 " type="text" name="park_name" id="park_name" required>
+    <button class="btn btn-primary">Submit</button>
+
+</form>
+
+
+
+{{!-- {{#if activity_data}}
+<div class="container">
+
+    <table class="table">
+        <tr>
+
+            <th>Activities</th>
+            <th></th>
+
+        </tr>
+        {{#each activity_data.activities}}
+        <tr>
+            <td>
+                {{this.name}}
+            </td>
+            <td width="150" >
+                <form action="/trip_id/edit/day_id/park_code" method="post">
+                    <button class="btn btn-outline-success" name="id" value="{{this.trip_id}}">Add</button>
+                </form>
+            </td>
+        </tr>
+        {{/each}}
+    </table>
+</div>
+  
+{{/if}} --}}
+
