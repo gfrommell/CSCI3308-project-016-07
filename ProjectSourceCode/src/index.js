@@ -660,6 +660,38 @@ app.get('/trip_id/edit/day_id/park_code/id', (req, res) =>{
   
 })
 
+app.get('/park_details/:park_code', async (req, res) => {
+    const parkCode = req.params.park_code;
+    const query = `SELECT * FROM parks WHERE park_code = $1 LIMIT 1`;
+    
+    db.oneOrNone(query, parkCode)
+    .then(data => {
+      console.log('hi');
+      console.log(data);
+      if(data) {
+        res.render('pages/parkDetails', {
+          data: data,
+          message: "Fetched park data"
+        });
+        console("Success");
+      } else {
+        res.render('pages/parkDetails', {
+          error: true,
+          message: "No data found for this park code"
+        });
+      }
+    })
+    .catch(err => {
+      res.render('pages/parkDetails', {
+        error: true,
+        message: "Could not fetch park data"
+      });
+      console.log("ERROR:", err);
+    });
+
+});
+
+
 
 app.get('/logout', (req, res) => {
   req.session.destroy();
