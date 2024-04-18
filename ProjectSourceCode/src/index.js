@@ -85,7 +85,48 @@ Handlebars.registerHelper('eventForDay', function(events, index) {
           accum.push(events[i]);
         }
     }
-    console.log(accum);
+    return accum;
+  }
+});
+
+Handlebars.registerHelper('campsForDay', function(camps, index) {
+  var accum = [];
+  if(camps == undefined){
+    return;
+  } else {
+    for(var i = 0; i < camps.length; ++i) {
+        if(camps[i].day_number == index){
+          accum.push(camps[i]);
+        }
+    }
+    return accum;
+  }
+});
+
+Handlebars.registerHelper('thingsForDay', function(things, index) {
+  var accum = [];
+  if(things == undefined){
+    return;
+  } else {
+    for(var i = 0; i < things.length; ++i) {
+        if(things[i].day_number == index){
+          accum.push(things[i]);
+        }
+    }
+    return accum;
+  }
+});
+
+Handlebars.registerHelper('toursForDay', function(tours, index) {
+  var accum = [];
+  if(tours == undefined){
+    return;
+  } else {
+    for(var i = 0; i < tours.length; ++i) {
+        if(tours[i].day_number == index){
+          accum.push(tours[i]);
+        }
+    }
     return accum;
   }
 });
@@ -565,7 +606,7 @@ app.get('/edit/:id/:day_id?', (req, res) => {
     `;
 
     //return await task.batch([task.one(query, id), task.any(parks, id), task.any(events, id), task.any(tours, id), task.any(things, id), task.any(camps, id)]);
-    return await task.batch([task.one(query, id), task.any(parks, id), task.any(events, id)]);
+    return await task.batch([task.one(query, id), task.any(parks, id), task.any(events, id), task.any(tours, id), task.any(things, id), task.any(campgrounds, id)]);
   })
   .then(data=>{
     
@@ -579,9 +620,9 @@ app.get('/edit/:id/:day_id?', (req, res) => {
       trip: data[0],
       parks: data[1],
       events: data[2],
-     // tours: data[3],
-      //things: data[4],
-      //camps: data[5],
+      tours: data[3],
+      things: data[4],
+      camps: data[5],
       message: "Fetched data"
     })
   })
