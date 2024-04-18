@@ -414,7 +414,7 @@ app.post("/createTrip", (req, res) => {
 
 // Delete row on the All trips page
 
-app.post('/trip/delete', (req,res) => {
+app.post('/tripDelete', (req,res) => {
   const id = req.body.trip_id;
   const query = `
     DELETE FROM trips WHERE trip_id = ${id};
