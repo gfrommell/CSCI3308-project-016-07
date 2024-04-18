@@ -635,8 +635,31 @@ app.get('/:trip_id/edit/:day_id/:park_code', (req, res) =>{
   const trip_id = req.params.trip_id;
   const day_id = req.params.day_id;
   const park_code = req.params.park_code;
+  const q1 = `
+    SELECT title FROM events WHERE park_code = $1;
+  `
+  const q2 =`
+  SELECT name FROM campgrounds WHERE park_code = $1;
+  ` 
+  const q3 =`
+    SELECT title FROM tours WHERE park_code = $1;
+  `
 
-  res.send(`This is the trip_id: ${trip_id}, day_id: ${day_id}, park_code: ${park_code}`)
+  db.task(async task =>{
+    return await task.batch([task.any(q1, park_code), task.any(q2, park_code), task.any(q3, park_code)]);
+  })
+  .then(data =>{
+    console.log(data[2])
+    res.render('pages/items',{
+      events:data[0],
+      campgrounds:data[1],
+      tours: data[2]
+
+    })
+  })
+  .catch(err =>{
+    console.log("ERROR")
+  })
   // res.redirect(`/edit/${trip_id}/${day_id}`)
 
   // const query = `
