@@ -28,6 +28,14 @@ const hbs = handlebars.create({
   partialsDir: __dirname + '/views/partials',
 });
 
+Handlebars.registerHelper('getFirstImage', function (images) {
+  if(images == undefined){
+    return {"url":"https://ralfvanveen.com/wp-content/uploads//2021/06/Placeholder-_-Begrippenlijst.svg"};
+  } else {
+    return images[0];
+  }
+});
+
 Handlebars.registerHelper('formatDate', function (date) {
   const d = new Date(date);
   const year = d.getFullYear();
@@ -159,10 +167,11 @@ db.connect()
 // *****************************************************
 
 // Register `hbs` as our view engine using its bound `engine()` function.
+app.use(bodyParser.json()); // specify the usage of JSON for parsing request body.
+
 app.engine('hbs', hbs.engine);
 app.set('view engine', 'hbs');
 app.set('views', path.join(__dirname, 'views'));
-app.use(bodyParser.json()); // specify the usage of JSON for parsing request body.
 
 // initialize session variables
 app.use(
@@ -289,27 +298,50 @@ app.post('/login', (req, res) => {
 });
 
 //Explore Parks 
-app.get('/exploreParks', (req, res) => {
-  var q1 = `Select park_code, fullName, states, json_array_elements(parks.images)->>'url' FROM parks LIMIT 12;`;
+app.get('/exploreParks/:keyword', (req, res) => {
 
-  //console.log("EXPLORE PATHS----")
-  db.any(q1)
-    .then(data => {
-      //console.log(data)
+  var q1 = `Select park_code, fullName, states, images, url FROM parks LIMIT 12;`;
+  const key = req.params.keyword;
 
-      res.render('pages/exploreParks', {
-        data: data,
-      });
-      // res.send(data);
-      res.status(200);
-    })
-    .catch(err => {
-      res.status(400);
-      res.render('pages/exploreParks', {
-        error: true,
-        message: 'no data',
-      })
-    })
+  if(key == 'none'){
+            db.any(q1)
+            .then(data => {
+
+              res.render('pages/exploreParks', {
+                data: data,
+              });
+              res.status(200);
+            })
+            .catch(err => {
+              res.status(400);
+              res.render('pages/exploreParks', {
+                error: true,
+                message: 'no data',
+              })
+            })
+    } else {
+      var q2 = `SELECT park_code, fullName, states, images, url FROM parks WHERE fullName ~~* '%${key}%' LIMIT 12;`
+      db.any(q2)
+          .then(data => {
+            res.render('pages/exploreParks', {
+              data: data,
+            });
+            res.status(200);
+          })
+          .catch(err => {
+            res.status(400);
+            res.render('pages/exploreParks', {
+              error: true,
+              message: 'no data',
+        })
+        })
+    }
+  
+});
+
+app.post('/exploreParks', (req, res) => {
+    res.redirect(`/exploreParks/${req.body.keyword}`);
+    res.status(200);
 });
 
 // Authentication Middleware.
