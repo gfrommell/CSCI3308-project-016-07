@@ -76,17 +76,21 @@
                              
                                     <label for="titleEdit">Title</label>
 
+
                                     <input class="form-control" type="text" name="title" id="titleEdit" placeholder="{{trip.trip_title}}" value="{{trip.trip_title}}">
+
 
                                     
                                     <div class="row my-2">
                                         <div class="col-6">
                                             <label for="startdateEdit">Start Date</label>
+
                                             <input class="form-control" type="date" name="startdate" id="startdateEdit" value="{{formatDateInput trip.start_date}}" >
                                         </div>
                                         <div class="col-6">
                                             <label for="numdaysEdit">Number of Days</label>
                                             <input class="form-control" type="number" name="numdays" id="numdaysEdit" min="1" value="{{trip.number_of_days}}">
+
                                         </div>
                                     </div>
 
