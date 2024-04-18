@@ -13,6 +13,7 @@ const session = require('express-session'); // To set the session object. To sto
 const bcrypt = require('bcrypt'); //  To hash passwords
 const axios = require('axios'); // To make HTTP requests from our server. We'll learn more about it in Part C.
 const { error } = require('console');
+const { lutimes } = require('fs');
 
 
 
@@ -341,6 +342,8 @@ app.post("/createTrip", (req, res) => {
   const startdate = req.body.startdate;
   const numDays = req.body.numdays;
   const username = user.username;
+  const trip_id = req.body.trip_id
+  let last_record;
   if (!username) {
     res.status(400).send("How did you even get this far without logging in???")
   }
@@ -361,6 +364,13 @@ app.post("/createTrip", (req, res) => {
   db.task(async task => {
     // result will have trip_id and number_of_days
     const result = await task.one(queryTrips, [title, startdate, numDays, username, trip_progress]);
+    if(trip_id){
+
+      await task.none(`DELETE FROM trips WHERE trip_id = $1`, [trip_id])
+      last_record = await task.one(`SELECT trip_id FROM trips ORDER BY trip_id DESC LIMIT 1;`)
+      
+    }
+    
     for (let i = 1; i <= numDays; i++) {
 
       await task.none(queryDays, [i, result.trip_id])
@@ -369,7 +379,20 @@ app.post("/createTrip", (req, res) => {
 
   })
     .then(data => {
-      res.redirect('/home');
+      if(trip_id){
+        res.redirect(`/edit/${last_record.trip_id}`)
+      }
+      else{
+
+        res.redirect('/home');
+      }
+      
+
+        
+      
+      // else{
+      //   res.redirect(`/edit/${last_record.trip_id}`)
+      // }
     })
     .catch(err => {
       res.redirect('/createTrip', {
@@ -427,9 +450,21 @@ app.get('/edit/:id/:day_id?', (req, res) => {
   const query = `
   SELECT * FROM trips WHERE trip_id = $1;`;
   let q2;
+  const limit_query = 
+  `
+    SELECT number_of_days from trips WHERE trip_id = $1;
+  `
 
   
     // console.log("IN DAY ID")
+    
+    
+    //TODO: more queries to get days_to : parks, events, things, tours, campgrounds
+    
+  db.task('get-trip-days',  async task => {
+    const {number_of_days} = await task.one(limit_query, [id])
+    const limit = number_of_days
+    console.log(limit)
     q2 = `
     SELECT DISTINCT days.*, trips.*, days_to_parks.park_code, parks.fullName
     FROM days 
@@ -437,13 +472,9 @@ app.get('/edit/:id/:day_id?', (req, res) => {
     LEFT JOIN days_to_parks ON days.day_id = days_to_parks.day_id 
     LEFT JOIN parks ON parks.park_code = days_to_parks.park_code
     WHERE trips.trip_id = $1
-    ORDER BY days.day_id ASC;`;
-
-    
-  //TODO: more queries to get days_to : parks, events, things, tours, campgrounds
-
-  db.task('get-trip-days', task => {
-    return task.batch([task.one(query, id), task.any(q2, id)]);
+    ORDER BY days.day_id ASC
+    LIMIT ${limit};`;
+    return await task.batch([task.one(query, id), task.any(q2, id)]);
   })
   .then(data=>{
     
@@ -468,6 +499,7 @@ app.get('/edit/:id/:day_id?', (req, res) => {
 
 app.post('/tripEdit', (req, res) => {
   const id = req.body.trip_id;
+  // const 
   var q1 = '';
   var q2 = '';
   var q3 = '';

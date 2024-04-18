@@ -15,6 +15,8 @@
 
         {{#each days}}
 
+           
+            
             <div class="mb-5 shadow p-3 bg-body-tertiary rounded"> 
                 <div class="row justify-content-between"> 
                     <div class="col-4 pb-2 d-inline" >
@@ -49,29 +51,27 @@
                 </table>
 
             </div>
-        {{/each}}
 
-
-    <!--EDIT Trip title, start date, and duration-->
-        <div id="edit-modal-{{trip.trip_id}}" class="modal" tabindex="-1" role="dialog" aria-hidden="true">
+            
+        <div id="edit-modal-{{this.trip_id}}" class="modal" tabindex="-1" role="dialog" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title">Edit trip details</h5>
+                                <h5 class="modal-title">Edit this details</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                                <form action="/tripEdit" method="post">
+                                <form action="/createTrip" method="post">
 
 
                              
                                     <label for="titleEdit">Title</label>
-                                    <input class="form-control" type="text" name="title" id="titleEdit" placeholder="{{trip_title}}">
+                                    <input class="form-control" type="text" name="title" id="titleEdit" placeholder="{{trip_title}}" value="{{this.trip_title}}">
                                     
                                     <div class="row my-2">
                                         <div class="col-6">
                                             <label for="startdateEdit">Start Date</label>
-                                            <input class="form-control" type="date" name="startdate" id="startdateEdit" value="{{formatDateInput start_date}}">
+                                            <input class="form-control" type="date" name="startdate" id="startdateEdit" value="{{formatDateInput start_date}}" >
                                         </div>
                                         <div class="col-6">
                                             <label for="numdaysEdit">Number of Days</label>
@@ -81,12 +81,16 @@
 
                                     <br>
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                    <button type="submit" name="trip_id" class="btn btn-primary" value="{{trip.trip_id}}">Edit</button>
+                                    <button type="submit" name="trip_id" class="btn btn-primary" value="{{this.trip_id}}">Edit</button>
                                 </form>
                             </div>
                         </div>
                     </div>
                 </div>
+        {{/each}}
+
+
+    <!--EDIT Trip title, start date, and duration-->
 
 
 
