@@ -428,35 +428,6 @@ app.post('/tripShare',(req,res)=>{
   })
 });
 
-
-app.get('/edit/:id', (req, res) => {
-  const id = req.params.id;
-  const query = `
-  SELECT * FROM trips WHERE trip_id = $1;`;
-  const q2 = `SELECT * FROM days WHERE trip_id = $1;`;
-
-  //TODO: more queries to get days_to : parks, events, things, tours, campgrounds
-
-  db.task('get-trip-days', task => {
-    return task.batch([task.any(query, id), task.any(q2, id)]);
-  })
-  .then(data=>{
-    console.log(data[1]);
-    res.render('pages/tripEditDetails',{
-      trip: data[0],
-      days: data[1],
-      message: "Fetched data"
-    })
-  })
-  .catch(err=>{
-    res.render('pages/allTrips',{
-      error: true,
-      message: "Could not fetch notifications"
-    })
-    console.log("ERROR")
-  })
-});
-
 app.post('/tripEdit', (req, res) => {
   const id = req.body.trip_id;
   var q1 = '';
