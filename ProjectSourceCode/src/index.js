@@ -653,33 +653,31 @@ app.get('/:trip_id/edit/:day_id/:park_code', (req, res) =>{
     res.render('pages/items',{
       events:data[0],
       campgrounds:data[1],
-      tours: data[2]
+      tours: data[2],
+      day_id :day_id
 
     })
   })
   .catch(err =>{
     console.log("ERROR")
   })
-  // res.redirect(`/edit/${trip_id}/${day_id}`)
-
-  // const query = `
-  //   SELECT activities FROM parks WHERE park_code = $1;
-  // `
-
-  // db.one(query, [park_code])
-  // .then(data =>{
-    
-  //   res.render('pages/activities',{
-  //     activity_data : data
-  //   })
-  // })
-  // .catch(err =>{
-  //   console.log(err)
-  // })
+  
 })
 
-app.get('/trip_id/edit/day_id/park_code/id', (req, res) =>{
+app.post('/insert/:day_id/:event_id', (req, res) =>{
   // Add specific item to that day
+  const day_id = req.params.day_id
+  const event_id = req.params.event_id;
+  const query =
+  `INSERT INTO days_to_events (day_id, event_id) VALUES ($1, $2)`
+
+  db.none(query, [day_id, event_id])
+  .then(()=>[
+    res.redirect('/home')
+  ])
+  .catch(err=>{
+    console.log("insert items error")
+  })
   
 })
 
