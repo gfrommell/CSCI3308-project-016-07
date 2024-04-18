@@ -13,24 +13,24 @@
         </div>
 
 
-        {{#each days}}
+        {{#times trip.number_of_days}}
 
-           
-            
             <div class="mb-5 shadow p-3 bg-body-tertiary rounded"> 
                 <div class="row justify-content-between"> 
                     <div class="col-4 pb-2 d-inline" >
-                        <h4>Day {{this.day_number}}: {{formatDateIncrement this.start_date @index}} </h4>
+                        <h4>Day {{@index}}: {{formatDateIncrement trip.start_date @index}} </h4>
                     </div>
-
+                    {{#with (checkParksDay parks @index) as | onePark | }}
                     <div class="col-4 pb-2 d-inline">
                         <form class="row justify-content-center" action="#" method="get">
-                            {{#if this.park_code}}
+                            {{#if onePark.park_code}}
                             
-                                <button formaction="/{{this.trip_id}}/edit/{{this.day_id}}" class="btn btn-outline-success col-4 mx-3">Change Park</button>
-                                <button formaction="/{{this.trip_id}}/edit/{{this.day_id}}/{{this.park_code}}" class="btn btn-outline-success col-4 ">Add Item</button>
+                                <button formaction="/{{trip.trip_id}}/edit/{{oneParks.day_id}}" class="btn btn-outline-success col-4 mx-3">Change Park</button>
+                                <button formaction="/{{trip.trip_id}}/edit/{{onePark.day_id}}/{{onePark.park_code}}" class="btn btn-outline-success col-4 ">Add Item</button>
                             {{else}}
-                                <button formaction="/{{this.trip_id}}/edit/{{this.day_id}}" class="btn btn-outline-success col-4">Add a Park</button>
+                                <button formaction="/{{onePark.trip_id}}/edit/{{onePark.day_id}}" class="btn btn-outline-success col-4">
+                                 Add to Park
+                                </button>
                             {{/if}}
                         </form>
                         
@@ -40,12 +40,20 @@
                 <table class="table table-light table-borderless">
 
                     <tr>
-                        <th><strong>Park: {{this.fullname}}</strong></th>
+                        <th><strong>Park: {{onePark.fullname}}</strong></th>
                     </tr>
-
+                    {{/with}}
 
                     <tr>
                         <th><strong>Items scheduled</strong></th>
+                        {{#with (eventForDay events @index) as | event |}}
+                            {{#each event}}
+                            <tr>
+                                <td>{{this.title}}</td>
+                            </tr>
+                            {{/each}}
+                         
+                        {{/with}}
                     </tr>
 
                 </table>
@@ -53,7 +61,8 @@
             </div>
 
             
-        <div id="edit-modal-{{this.trip_id}}" class="modal" tabindex="-1" role="dialog" aria-hidden="true">
+            
+        <div id="edit-modal-{{trip.trip_id}}" class="modal" tabindex="-1" role="dialog" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -67,29 +76,36 @@
                              
                                     <label for="titleEdit">Title</label>
 
-                                    <input class="form-control" type="text" name="title" id="titleEdit" placeholder="{{trip_title}}" value="{{trip_title}}" required>
+
+                                    <input class="form-control" type="text" name="title" id="titleEdit" placeholder="{{trip.trip_title}}" value="{{trip.trip_title}}">
+
 
                                     
                                     <div class="row my-2">
                                         <div class="col-6">
                                             <label for="startdateEdit">Start Date</label>
-                                            <input class="form-control" type="date" name="startdate" id="startdateEdit" value="{{formatDateInput start_date}}" required>
+
+                                            <input class="form-control" type="date" name="startdate" id="startdateEdit" value="{{formatDateInput trip.start_date}}" >
                                         </div>
                                         <div class="col-6">
                                             <label for="numdaysEdit">Number of Days</label>
-                                            <input class="form-control" type="number" name="numdays" id="numdaysEdit" min="1" value="{{number_of_days}}" required>
+                                            <input class="form-control" type="number" name="numdays" id="numdaysEdit" min="1" value="{{trip.number_of_days}}">
+
                                         </div>
                                     </div>
 
                                     <br>
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                    <button type="submit" name="trip_id" class="btn btn-primary" value="{{this.trip_id}}">Edit</button>
+                                    <button type="submit" name="trip_id" class="btn btn-primary" value="{{trip.trip_id}}">Edit</button>
                                 </form>
                             </div>
                         </div>
                     </div>
                 </div>
-        {{/each}}
+
+                
+
+        {{/times}}
 
 
     <!--EDIT Trip title, start date, and duration-->

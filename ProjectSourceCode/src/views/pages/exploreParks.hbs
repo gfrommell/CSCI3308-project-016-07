@@ -8,7 +8,7 @@
             <div class="col-md-6">
              <form method='POST' action="/exploreParks">
                 <input type="keyword" name="keyword" placeholder="Search"/>
-                 <button id="submit_button" class="btn btn-primary" type="submit">S</button>
+                 <button id="submit_button" class="btn btn-primary" type="submit">Search</button>
                  
             </form> 
             </div>
@@ -17,7 +17,7 @@
             {{#each data}}
             <div class="col-md-4 mb-4">
                 <div class="card">
-                    <img class="card-img-top" src={{this.url}} alt="Event Image">
+                    <img class="card-img-top" src="{{this.?column?}}" alt="Event Image">
                     <div class="card-body">
                         <h5 class="card-title">{{this.fullName}}</h5>
                         <p class="card-text">Location: {{this.states}}</p>
