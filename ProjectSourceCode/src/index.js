@@ -30,7 +30,7 @@ const hbs = handlebars.create({
 
 Handlebars.registerHelper('getFirstImage', function (images) {
   if(images == undefined){
-    return;
+    return {"url":"https://ralfvanveen.com/wp-content/uploads//2021/06/Placeholder-_-Begrippenlijst.svg"};
   } else {
     return images[0];
   }
