@@ -171,12 +171,13 @@ app.post('/login', (req,res)=> {
 app.get('/exploreParks', (req, res) => {
   var q1 = `Select park_code, fullName, states, json_array_elements(parks.images)->>'url' FROM parks LIMIT 12;`;
   console.log("EXPLORE PATHS----")
-  db.any(q1)
+  db.any(q1)    
     .then(data =>{
       console.log(data)
       res.render('pages/exploreParks', {
         data:data,
       });
+      // res.send(data);
       res.status(200);
     })
     .catch(err => {
