@@ -922,39 +922,10 @@ app.get('/park_details/:park_code', async (req, res) => {
     res.render('pages/parkDetails', {
         error: true,
         message: "Could not fetch park data",
-        details: err.message  // Show detailed error message
+        details: err.message 
     });
-    console.log("ERROR:", err);  // Log the full error
+    console.log("ERROR:", err); 
 }
-    // const parkCodePlus = req.params.park_code;
-    // const parkCode = parkCodePlus.substring(1);
-    // const query = `SELECT * FROM parks WHERE park_code = $1 LIMIT 1`;
-    
-    // db.oneOrNone(query, [parkCode])
-    // .then(data => {
-    //   console.log(parkCode);
-    //   console.log(data);
-    //   if(data) {
-    //     res.render('pages/parkDetails', {
-    //       data: data,
-    //       message: "Fetched park data"
-    //     });
-    //     console.log("Found Park!");
-    //   } else {
-    //     res.render('pages/parkDetails', {
-    //       error: true,
-    //       message: "No data found for this park code"
-    //     });
-    //     console.log("Could not find Park.");
-    //   }
-    // })
-    // .catch(err => {
-    //   res.render('pages/parkDetails', {
-    //     error: true,
-    //     message: "Could not fetch park data"
-    //   });
-    //   console.log("ERROR:", err);
-    // });
 });
 
 
