@@ -1,16 +1,14 @@
 # CSCI3308-project-016-07
 Group project softdev
 
-- Description: Our website allows user to plan a trip to national parks. A user can research parks, create a trip with an itenerary, and share trips with other users.
+- Description: Our website allows users to plan a trip to national parks. A user can research parks, create a trip with an itinerary, and share trips with other users.
 
 - Contributors: Tehya Laughlin, Devin Green, Jack Schwalbach, Derick Sayavong, George Frommell, and Griffin King.
 
-- Technology used: Github, VScode, Figma, Handlebars, JavaScript, Node.js, ProgreSQL, and Docker.
+- Technology used: Github, Figma, Handlebars, JavaScript, Node.js, ProgreSQL, and Docker.
 
-- Prerequisites: <Any software that needs to be installed to run the application>
+- Prerequisites: All prerequisites are handled by docker and package.json. Included in this are bcrypt, express json, mocha and chai.
 
-- Instructions: <How to run the application locally>
+- Instructions: Make sure that port 3000 is available. In order to run locally, open a terminal and naviagte to CSCI3308-project-016-07/ProjectSourceCode and run 'docker compose up -d'. Then, go to the browser and go to the url 'localhost:3000/'.
 
-- Testing: <How to run the tests> 
-
-- Link: <Link to the deployed application>
+- Testing: In order to run tests, change the docker command from 'npm start' to 'npm run testandrun'. Then use the terminal command 'docker compose up'
