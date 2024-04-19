@@ -104,3 +104,39 @@
 
 
 </table>
+
+<table class="table table-light container">
+    <th>Things to do</th>
+    <th></th>
+    {{#if things}}
+        {{#each things}}
+            <tr>
+                <td>
+                    {{this.title}}
+
+                <td width="150">
+                    
+
+                    <form action="/insert-thing/{{../day_id}}/{{this.thing_id}}" method="post">
+ 
+                        <button name="trip_id" value="{{../trip_id}}" class="btn btn-outline-success">Add</button>
+                    </form>
+                    
+                </td>
+                </td>
+            </tr>
+        {{/each}}
+    {{else}}
+
+        <tr>
+            <td>
+
+                <p class="text-danger">No things to do</p>
+            </td>
+            <td></td>
+        </tr>
+
+    {{/if}}
+
+
+</table>

@@ -805,17 +805,24 @@ app.get('/:trip_id/edit/:day_id/:park_code', (req, res) =>{
     SELECT title, tour_id FROM tours WHERE park_code = $1;
   `
 
+  const q4 = `
+    SELECT things_to_do.title, things_to_do.thing_id FROM things_to_do
+    LEFT JOIN parks_to_things ON parks_to_things.thing_id = things_to_do.thing_id
+    WHERE parks_to_things.park_code = $1;
+  `;
+
   db.task(async task =>{
-    return await task.batch([task.any(q1, park_code), task.any(q2, park_code), task.any(q3, park_code)]);
+    return await task.batch([task.any(q1, park_code), task.any(q2, park_code), task.any(q3, park_code), task.any(q4, park_code)]);
   })
   .then(data =>{
+    console.log(data[3][0]);
     res.render('pages/items',{
       events:data[0],
       campgrounds:data[1],
       tours: data[2],
+      things: data[3],
       day_id :day_id,
       trip_id :trip_id
-
     })
   })
   .catch(err =>{
@@ -833,6 +840,24 @@ app.post('/insert-event/:day_id/:event_id', (req, res) =>{
   `INSERT INTO days_to_events (day_id, event_id) VALUES ($1, $2)`
 
   db.none(query, [day_id, event_id])
+  .then(()=>[
+    res.redirect(`/edit/${trip_id}`)
+  ])
+  .catch(err=>{
+    console.log("insert items error")
+  })
+  
+})
+
+app.post('/insert-thing/:day_id/:thing_id', (req, res) =>{
+  // Add specific item to that day
+  const day_id = req.params.day_id
+  const thing_id = req.params.thing_id;
+  const trip_id = req.body.trip_id;
+  const query =
+  `INSERT INTO days_to_things (day_id, thing_id) VALUES ($1, $2)`
+
+  db.none(query, [day_id, thing_id])
   .then(()=>[
     res.redirect(`/edit/${trip_id}`)
   ])
