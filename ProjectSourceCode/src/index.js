@@ -230,35 +230,9 @@ app.get('/register', (req, res) => {
 });
 
 
-app.get('/home', (req, res) => {
-  if (req.session.user) {
-
-    const query = `
-  SELECT t.trip_id, t.trip_title, t.start_date, t.number_of_days, t.trip_progress
-  FROM trips t
-  LEFT JOIN trips_to_users ttu ON t.trip_id = ttu.trip_id
-  WHERE t.username = $1 OR ttu.username = $1;
-`;
-
-    db.any(query, [user.username])
-      .then(data => {
-        res.render('pages/home', { data: data });
-      })
-      .catch((err) => {
-        res.render('pages/home', { data: [] });
-        console.log("error")
-      });
-
-
-  } else {
-    res.redirect('/login'); // redirect users to login page  
-  }
-});
-
 app.get('/login', (req, res) => {
   res.render('pages/login');
 });
-
 
 // Register
 app.post('/register', async (req, res) => {
@@ -321,6 +295,43 @@ app.post('/login', (req, res) => {
 
 });
 
+// Authentication Middleware.
+const auth = (req, res, next) => {
+  if (!req.session.user) {
+    // Default to login page.
+    return res.redirect('/login');
+  }
+  next();
+};
+
+// Authentication Required
+app.use(auth);
+
+app.get('/home', (req, res) => {
+  if (req.session.user) {
+
+    const query = `
+  SELECT t.trip_id, t.trip_title, t.start_date, t.number_of_days, t.trip_progress
+  FROM trips t
+  LEFT JOIN trips_to_users ttu ON t.trip_id = ttu.trip_id
+  WHERE t.username = $1 OR ttu.username = $1;
+`;
+
+    db.any(query, [user.username])
+      .then(data => {
+        res.render('pages/home', { data: data });
+      })
+      .catch((err) => {
+        res.render('pages/home', { data: [] });
+        console.log("error")
+      });
+
+
+  } else {
+    res.redirect('/login'); // redirect users to login page  
+  }
+});
+
 //Explore Parks 
 app.get('/exploreParks/:keyword', (req, res) => {
 
@@ -368,17 +379,6 @@ app.post('/exploreParks', (req, res) => {
     res.status(200);
 });
 
-// Authentication Middleware.
-const auth = (req, res, next) => {
-  if (!req.session.user) {
-    // Default to login page.
-    return res.redirect('/login');
-  }
-  next();
-};
-
-// Authentication Required
-app.use(auth);
 
 app.get('/alltrips', (req, res) => {
 
