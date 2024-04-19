@@ -36,6 +36,30 @@ Handlebars.registerHelper('getFirstImage', function (images) {
   }
 });
 
+Handlebars.registerHelper('getNimagesFromIndex', function (images,index) {
+  var ret = [];
+  for(var i = index*4; i < (index*4 + 4); ++i ){
+    if( ((images.length-1) >= (i)) && images[i].url != undefined){
+      ret.push(`${images[i].url}`);
+    } else {
+      ret.push("https://ralfvanveen.com/wp-content/uploads//2021/06/Placeholder-_-Begrippenlijst.svg");
+    }
+  }
+  return {"images": ret};
+});
+
+Handlebars.registerHelper('getImageAtIndex', function (images, index) {
+  return images[index];
+});
+
+Handlebars.registerHelper('checkIndex', function (index) {
+  return index == 0;
+});
+
+Handlebars.registerHelper('getImagesRows', function (images) {
+  return (images.length / 4);
+});
+
 Handlebars.registerHelper('formatDate', function (date) {
   const d = new Date(date);
   const year = d.getFullYear();
@@ -920,21 +944,27 @@ app.get('/park_details/:park_code', async (req, res) => {
   JOIN parks p ON ptt.park_code = p.park_code
   WHERE p.park_code = $1;`;
 
+  const q4 = `
+    SELECT json_array_elements(parks.images)->'url' AS url FROM parks WHERE park_code = $1;
+  `;
+
   try {
     const data = await db.oneOrNone(query1, [parkCode]);
-    console.log("Data from first query:", data);
 
     const data2 = await db.any(query2, [parkCode]);
-    console.log("Data from second query:", data2);
+    //console.log("Data from second query:", data2);
 
     const data3 = await db.any(query3, [parkCode]);
-    console.log("Data from third query:", data3);
+    //console.log("Data from third query:", data3);
+
+    const image = await db.any(q4, [parkCode]);
 
     if (data) {
         res.render('pages/parkDetails', {
             data: data,
             data2: data2,
             data3: data3,
+            images: image,
             message: "Fetched park data"
         });
     } else {

@@ -9,23 +9,54 @@
     <p>{{data.description}}</p>
   </div>
 
-  <div class="button-container">
+  <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-inner">
+
+      {{#times (getImagesRows images)}}
+          {{#if (checkIndex @index)}}
+          <div class="carousel-item active">
+          {{else}}
+          <div class="carousel-item">
+          {{/if}}
+          <div class="container-fluid">
+            <div class="row align-items-center" style="height: 30vh">
+              {{#with (getNimagesFromIndex data.images @index) as | image |}}
+                {{#each image.images}}
+                  <img src="{{this}}" class="col-sm-3" alt="From park">
+                {{/each}}
+              {{/with}}
+            </div>
+          </div>
+        </div>
+      {{/times}}
+
+    </div>
+    
+  </div>
+
+
+  <div class="button-container pt-2">
   {{#each data2}}
-  <button class="button">{{this.name}}</button>
+  <div class="button bgcolor-zomp text-light">
+    {{this.name}}
+  </div>
   {{/each}}
-</div>
+  </div>
 
   <h3 style="padding-top:50px;">Things to do</h3>
 
   <div class="activities-grid">
     {{#each data3}}
-    <div class="activity">
-      <div class="activity-name">{{this.title}}</div>
-      <div class="description">
-        <p>{{this.shortdescription}}</p>
+
+    <div class="card" style="width: 22rem;">
+      <div class="card-body">
+        <h5 class="card-title">{{this.title}}</h5>
+        <h6 class="card-subtitle mb-2 text-body-secondary">{{this.timeOfDayDescription}}</h6>
+        <p class="card-text">{{this.shortdescription}}</p>
+        <a href="https://www.nps.gov" class="card-link">See more at nps.gov</a>
       </div>
-      <a href="https://www.nps.gov" class="footer-link">See more at nps.gov</a>
     </div>
+
     {{/each}}
   </div>
 
@@ -64,7 +95,6 @@
     margin-bottom: 20px;
     }
     .description{
-    border: 1px solid #ccc;
     padding: 10px;
     margin-bottom: 20px;
     flex-grow: 1;
@@ -82,8 +112,7 @@
     display: inline-block;
     margin-right: 10px;
     padding: 10px 15px;
-    border: 1px solid #ccc;
-    background-color: #dfdede;
+    border-radius: 8px;
     cursor: pointer;
     text-align: center;
     }

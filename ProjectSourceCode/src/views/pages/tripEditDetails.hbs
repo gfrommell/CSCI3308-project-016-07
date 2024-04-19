@@ -26,10 +26,10 @@
                             {{#if onePark.park_code}}
                             
                                 <button formaction="/{{onePark.trip_id}}/edit/{{onePark.day_id}}" class="btn btn-outline-success col-4 mx-3">Change Park</button>
-                                <button formaction="/{{onePark.trip_id}}/edit/{{onePark.day_id}}/{{onePark.park_code}}" class="btn btn-outline-success col-4 ">Add Item</button>
+                                <button formaction="/{{onePark.trip_id}}/edit/{{onePark.day_id}}/{{onePark.park_code}}" class="btn btn-success col-4 ">Add Item</button>
                             {{else}}
                                 <button formaction="/{{onePark.trip_id}}/edit/{{onePark.day_id}}" class="btn btn-outline-success col-4">
-                                 Add to Park
+                                 Add a Park
                                 </button>
                             {{/if}}
                         </form>
@@ -45,8 +45,16 @@
                     {{/with}}
 
                     <tr>
-                        <th><strong>Events</strong></th>
+                        <td><h3>Items Scheduled</h3></td>
+                        
+                    </tr>
+
+                    <tr>
                         {{#with (eventForDay events @index) as | event |}}
+                       
+                            <th><strong>Events</strong></th>
+                   
+                        
                             {{#each event}}
                             <tr>
                                 <td>{{this.title}}</td>
@@ -55,8 +63,11 @@
                          
                         {{/with}}
 
-                        <th><strong>Tours</strong></th>
                         {{#with (toursForDay tours @index) as | tour |}}
+            
+                            <th><strong>Tours</strong></th>
+            
+                        
                             {{#each tour}}
                             <tr>
                                 <td>{{this.title}}</td>
@@ -65,8 +76,11 @@
                          
                         {{/with}}
 
-                        <th><strong>Things to do</strong></th>
                         {{#with (thingsForDay things @index) as | thing |}}
+                 
+                            <th><strong>Things to do</strong></th>
+                     
+                        
                             {{#each thing}}
                             <tr>
                                 <td>{{this.title}}</td>
@@ -75,8 +89,11 @@
                          
                         {{/with}}
 
-                        <th><strong>Campgrounds</strong></th>
                         {{#with (campsForDay camps @index) as | camp |}}
+                     
+                            <th><strong>Campgrounds</strong></th>
+                  
+                        
                             {{#each camp}}
                             <tr>
                                 <td>{{this.name}}</td>
