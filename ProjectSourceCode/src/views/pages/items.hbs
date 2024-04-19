@@ -1,0 +1,106 @@
+<div class="container">
+    
+</div>
+<table class="table table-light container">
+    <th>Events</th>
+    <th></th>
+    {{#if events}}
+
+        {{#each events}}
+            <tr>
+                <td>
+
+                    {{this.title}}
+                </td>
+                <td width="150">
+                    <form action="/insert-event/{{../day_id}}/{{this.event_id}}" method="post">
+ 
+                         <button name="trip_id" value="{{../trip_id}}" class="btn btn-outline-success">Add</button>
+                    </form>
+                </td>
+            </tr>
+           
+        {{/each}}
+    {{else}}
+        <tr>
+            <td>
+
+                <p class="text-danger">No Events</p>
+            </td>
+            <td></td>
+        </tr>
+    {{/if}}
+
+</table>
+
+<table class="table table-light container">
+    <th>Campgrounds</th>
+    <th></th>
+    {{#if campgrounds}}
+        {{#each campgrounds}}
+        <tr>
+            <td> 
+
+                {{this.name}}
+            <td width="150">
+              
+
+                    <form action="/insert-campground/{{../day_id}}/{{this.campground_id}}" method="post">
+ 
+                         <button name="trip_id" value="{{../trip_id}}" class="btn btn-outline-success">Add</button>
+                    </form>
+                
+            </td>
+            </td>
+        </tr>
+        {{/each}}
+    {{else}}
+
+        <tr>
+            <td>
+
+                <p class="text-danger">No Campgrounds</p>
+            </td>
+            <td></td>
+        </tr>
+
+    {{/if}}
+
+
+</table>
+
+<table class="table table-light container">
+    <th>Tours</th>
+    <th></th>
+    {{#if tours}}
+        {{#each tours}}
+            <tr>
+                <td>
+                    {{this.title}}
+
+                <td width="150">
+                    
+
+                    <form action="/insert-tour/{{../day_id}}/{{this.tour_id}}" method="post">
+ 
+                        <button name="trip_id" value="{{../trip_id}}" class="btn btn-outline-success">Add</button>
+                    </form>
+                    
+                </td>
+                </td>
+            </tr>
+        {{/each}}
+    {{else}}
+
+        <tr>
+            <td>
+
+                <p class="text-danger">No Tours</p>
+            </td>
+            <td></td>
+        </tr>
+
+    {{/if}}
+
+
+</table>

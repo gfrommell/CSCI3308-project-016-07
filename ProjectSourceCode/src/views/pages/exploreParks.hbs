@@ -1,15 +1,13 @@
 <div class="container mt-5">
-                    
-
+        
         <div class="row"> 
             <div class="col-md-6">
                 <h1 class="mb-4"> Explore Parks</h1>
             </div>
             <div class="col-md-6">
-             <form method='POST' action="/exploreParks">
-                <input type="keyword" name="keyword" placeholder="Search"/>
-                 <button id="submit_button" class="btn btn-primary" type="submit">Search</button>
-                 
+             <form method="post" action="/exploreParks">
+                <input type="text" class="form-contorl" name="keyword" id="keyword" placeholder="Search"/>
+                <button id="submit_button" class="btn btn-primary" type="submit">Search</button>
             </form> 
             </div>
         </div>
@@ -17,12 +15,14 @@
             {{#each data}}
             <div class="col-md-4 mb-4">
                 <div class="card">
-                    <img class="card-img-top" src="{{this.?column?}}" alt="Event Image">
+                    {{#with (getFirstImage this.images) as | image | }}
+                    <img class="card-img-top" src="{{image.url}}" alt="Event Image">
+                    {{/with}}
                     <div class="card-body">
                         <h5 class="card-title">{{this.fullName}}</h5>
                         <p class="card-text">Location: {{this.states}}</p>
                         <p class="card-text">Park Code: {{this.park_code}}</p>
-                        <a href="/park_details/:{{this.park_code}}">Details</a>
+                        <a href="/park_details/:{{this.park_code}}">Details</a
                         <a href="google.com" class="btn btn-primary">Create Trip</a>
                     </div>
                 </div>
