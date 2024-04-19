@@ -48,7 +48,7 @@ Handlebars.registerHelper('formatDateIncrement', function (date, index) {
   const d = new Date(date);
   d.setDate(d.getDate() + index);
   const year = d.getFullYear();
-  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const month = String(d.getMonth()).padStart(2, '0');
   const day = String(d.getDate()+ index).padStart(2, '0');
   return `${year}/${day}/${month}`;
 });
@@ -64,6 +64,32 @@ Handlebars.registerHelper('times', function(n, block) {
     }
     return accum;
 });
+
+Handlebars.registerHelper('checkParksDay', function(parks, index) {
+  var accum;
+  for(var i = 0; i < parks.length; ++i) {
+      if(parks[i].day_number == index){
+        accum = parks[i];
+      }
+  }
+  return accum;
+});
+
+Handlebars.registerHelper('eventForDay', function(events, index) {
+  var accum = [];
+  if(events == undefined){
+    return;
+  } else {
+    for(var i = 0; i < events.length; ++i) {
+        if(events[i].day_number == index){
+          accum.push(events[i]);
+        }
+    }
+    console.log(accum);
+    return accum;
+  }
+});
+
 
 // database configuration
 const dbConfig = {
@@ -224,13 +250,16 @@ app.post('/login', (req, res) => {
 //Explore Parks 
 app.get('/exploreParks', (req, res) => {
   var q1 = `Select park_code, fullName, states, json_array_elements(parks.images)->>'url' FROM parks LIMIT 12;`;
+
   //console.log("EXPLORE PATHS----")
   db.any(q1)
     .then(data => {
       //console.log(data)
+
       res.render('pages/exploreParks', {
         data: data,
       });
+      // res.send(data);
       res.status(200);
     })
     .catch(err => {
@@ -267,7 +296,6 @@ app.get('/alltrips', (req, res) => {
 
   db.any(query, [username])
     .then(data => {
-      console.log(data);
       res.render('pages/allTrips', { 
 
         data: data
@@ -310,7 +338,6 @@ app.get('/notifications', (req, res) => {
 });
 
 app.post('/notifications/accepted', async (req, res) => {
-  console.log('Request Body:', req.body);
   const { notificationId, receiverUsername, tripID } = req.body;
   try {
     await db.task(async task => {
@@ -379,7 +406,7 @@ app.post("/createTrip", (req, res) => {
       
     }
     
-    for (let i = 1; i <= numDays; i++) {
+    for (let i = 0; i <= numDays; i++) {
 
       await task.none(queryDays, [i, result.trip_id])
     }
@@ -464,37 +491,97 @@ app.get('/edit/:id/:day_id?', (req, res) => {
   `
     SELECT number_of_days from trips WHERE trip_id = $1;
   `
-
-  
-    // console.log("IN DAY ID")
-    
-    
-    //TODO: more queries to get days_to : parks, events, things, tours, campgrounds
-    
   db.task('get-trip-days',  async task => {
-    const {number_of_days} = await task.one(limit_query, [id])
-    const limit = number_of_days
-    console.log(limit)
-    q2 = `
-    SELECT DISTINCT days.*, trips.*, days_to_parks.park_code, parks.fullName
-    FROM days 
-    INNER JOIN trips ON days.trip_id = trips.trip_id 
-    LEFT JOIN days_to_parks ON days.day_id = days_to_parks.day_id 
-    LEFT JOIN parks ON parks.park_code = days_to_parks.park_code
-    WHERE trips.trip_id = $1
-    ORDER BY days.day_id ASC
-    LIMIT ${limit};`;
-    return await task.batch([task.one(query, id), task.any(q2, id)]);
+
+    parks = `
+      WITH
+      aggregateParks AS (
+        SELECT DISTINCT days.*, trips.*, days_to_parks.park_code, parks.fullName
+        FROM days 
+        INNER JOIN trips ON days.trip_id = trips.trip_id 
+        LEFT JOIN days_to_parks ON days.day_id = days_to_parks.day_id 
+        LEFT JOIN parks ON parks.park_code = days_to_parks.park_code
+        WHERE trips.trip_id = $1
+        ORDER BY days.day_id ASC
+      )
+      SELECT * FROM aggregateParks;
+    `;
+
+    events = `
+      WITH
+      aggregateEvents AS (
+        SELECT DISTINCT days.*, trips.*, days_to_events.event_id, events.title
+        FROM days 
+        INNER JOIN trips ON days.trip_id = trips.trip_id 
+        LEFT JOIN days_to_events ON days.day_id = days_to_events.day_id 
+        LEFT JOIN events ON events.event_id = days_to_events.event_id
+        WHERE trips.trip_id = $1
+        ORDER BY days.day_id ASC
+      )
+      SELECT * FROM aggregateEvents;
+    `;
+
+    tours = `
+      WITH
+      aggregateTours AS (
+        SELECT DISTINCT days.*, trips.*, days_to_tours.tour_id, tours.title
+        FROM days 
+        INNER JOIN trips ON days.trip_id = trips.trip_id 
+        LEFT JOIN days_to_tours ON days.day_id = days_to_tours.day_id 
+        LEFT JOIN tours ON tours.tour_id = days_to_tours.tour_id
+        WHERE trips.trip_id = $1
+        ORDER BY days.day_id ASC
+      )
+      SELECT * FROM aggregateTours;
+    `;
+
+    things = `
+      WITH
+      aggregateThings AS (
+        SELECT DISTINCT days.*, trips.*, days_to_things.thing_id, things_to_do.title
+        FROM days 
+        INNER JOIN trips ON days.trip_id = trips.trip_id 
+        LEFT JOIN days_to_things ON days.day_id = days_to_things.day_id 
+        LEFT JOIN things_to_do ON things_to_do.thing_id = days_to_things.thing_id
+        WHERE trips.trip_id = $1
+        ORDER BY days.day_id ASC
+      )
+    SELECT * FROM aggregateThings;
+    `;
+
+
+    campgrounds = `
+      WITH
+      aggregateCamps AS (
+        SELECT DISTINCT days.*, trips.*, days_to_campgrounds.campground_id, campgrounds.name
+        FROM days 
+        INNER JOIN trips ON days.trip_id = trips.trip_id 
+        LEFT JOIN days_to_campgrounds ON days.day_id = days_to_campgrounds.day_id 
+        LEFT JOIN campgrounds ON campgrounds.campground_id = days_to_campgrounds.campground_id
+        WHERE trips.trip_id = $1
+        ORDER BY days.day_id ASC
+      )
+    SELECT * FROM aggregateCamps;
+    `;
+
+    //return await task.batch([task.one(query, id), task.any(parks, id), task.any(events, id), task.any(tours, id), task.any(things, id), task.any(camps, id)]);
+    return await task.batch([task.one(query, id), task.any(parks, id), task.any(events, id)]);
   })
   .then(data=>{
     
-    // console.log(data[1]);
-    // console.log(data[2])
+    // data[0] is the trip data underneath the specific trip_id
+    // data[1] is the park to days data
+    // data[2] is the events to days data
+    // data[3] is the tours to days data
+    // data[4] is the things to days data
+    // data[5] is the campgrounds to days data
     res.render('pages/tripEditDetails',{
       trip: data[0],
-      days: data[1],
-
-      
+      parks: data[1],
+      events: data[2],
+     // tours: data[3],
+      //things: data[4],
+      //camps: data[5],
       message: "Fetched data"
     })
   })
@@ -661,34 +748,82 @@ app.get('/trip_id/edit/day_id/park_code/id', (req, res) =>{
 })
 
 app.get('/park_details/:park_code', async (req, res) => {
-    const parkCode = req.params.park_code;
-    const query = `SELECT * FROM parks WHERE park_code = $1 LIMIT 1`;
-    
-    db.oneOrNone(query, parkCode)
-    .then(data => {
-      console.log('hi');
-      console.log(data);
-      if(data) {
-        res.render('pages/parkDetails', {
-          data: data,
-          message: "Fetched park data"
-        });
-        console("Success");
-      } else {
-        res.render('pages/parkDetails', {
-          error: true,
-          message: "No data found for this park code"
-        });
-      }
-    })
-    .catch(err => {
-      res.render('pages/parkDetails', {
-        error: true,
-        message: "Could not fetch park data"
-      });
-      console.log("ERROR:", err);
-    });
+  const parkCodePlus = req.params.park_code;
+  const parkCode = parkCodePlus.substring(1);
+  const query1 = `SELECT * FROM parks WHERE park_code = $1 LIMIT 1`;
 
+  const query2 = `SELECT a.name
+  FROM activities a
+  JOIN activities_to_parks atp ON a.activity_id = atp.activity_id
+  JOIN parks p ON atp.park_code = p.park_code
+  WHERE p.park_code = $1;`;
+
+  const query3 = `SELECT t.title, t.shortDescription, t.timeOfDayDescription, t.seasonDescription
+  FROM things_to_do t
+  JOIN parks_to_things ptt ON t.thing_id = ptt.thing_id
+  JOIN parks p ON ptt.park_code = p.park_code
+  WHERE p.park_code = $1;`;
+
+  try {
+    const data = await db.oneOrNone(query1, [parkCode]);
+    console.log("Data from first query:", data);
+
+    const data2 = await db.any(query2, [parkCode]);
+    console.log("Data from second query:", data2);
+
+    const data3 = await db.any(query3, [parkCode]);
+    console.log("Data from third query:", data3);
+
+    if (data) {
+        res.render('pages/parkDetails', {
+            data: data,
+            data2: data2,
+            data3: data3,
+            message: "Fetched park data"
+        });
+    } else {
+        res.render('pages/parkDetails', {
+            error: true,
+            message: "No data found for this park code"
+        });
+    }
+} catch (err) {
+    res.render('pages/parkDetails', {
+        error: true,
+        message: "Could not fetch park data",
+        details: err.message  // Show detailed error message
+    });
+    console.log("ERROR:", err);  // Log the full error
+}
+    // const parkCodePlus = req.params.park_code;
+    // const parkCode = parkCodePlus.substring(1);
+    // const query = `SELECT * FROM parks WHERE park_code = $1 LIMIT 1`;
+    
+    // db.oneOrNone(query, [parkCode])
+    // .then(data => {
+    //   console.log(parkCode);
+    //   console.log(data);
+    //   if(data) {
+    //     res.render('pages/parkDetails', {
+    //       data: data,
+    //       message: "Fetched park data"
+    //     });
+    //     console.log("Found Park!");
+    //   } else {
+    //     res.render('pages/parkDetails', {
+    //       error: true,
+    //       message: "No data found for this park code"
+    //     });
+    //     console.log("Could not find Park.");
+    //   }
+    // })
+    // .catch(err => {
+    //   res.render('pages/parkDetails', {
+    //     error: true,
+    //     message: "Could not fetch park data"
+    //   });
+    //   console.log("ERROR:", err);
+    // });
 });
 
 

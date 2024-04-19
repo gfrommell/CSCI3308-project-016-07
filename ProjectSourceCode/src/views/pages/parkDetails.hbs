@@ -1,4 +1,116 @@
-<h1>Park Details</h1>
-{{#each data}}
-<h1>{{this.fullName}}</h1>
-{{/each}}
+<div class="container">
+
+  <div class="header">
+    <h1>{{data.fullname}}</h1>
+    <p id="location">Location</p>
+  </div>
+
+  <div class="description">
+    <p>{{data.description}}</p>
+  </div>
+
+  <div class="button-container">
+  {{#each data2}}
+  <button class="button">{{this.name}}</button>
+  {{/each}}
+</div>
+
+  <h3 style="padding-top:50px;">Things to do</h3>
+
+  <div class="activities-grid">
+    {{#each data3}}
+    <div class="activity">
+      <div class="activity-name">{{this.title}}</div>
+      <div class="description">
+        <p>{{this.shortdescription}}</p>
+      </div>
+      <a href="https://www.nps.gov" class="footer-link">See more at nps.gov</a>
+    </div>
+    {{/each}}
+  </div>
+
+</div>
+
+<script>
+    function getState(abbreviation) {
+    const states = {
+        AL: "Alabama", AK: "Alaska", AZ: "Arizona", AR: "Arkansas", CA: "California",
+        CO: "Colorado", CT: "Connecticut", DE: "Delaware", FL: "Florida", GA: "Georgia",
+        HI: "Hawaii", ID: "Idaho", IL: "Illinois", IN: "Indiana", IA: "Iowa",
+        KS: "Kansas", KY: "Kentucky", LA: "Louisiana", ME: "Maine", MD: "Maryland",
+        MA: "Massachusetts", MI: "Michigan", MN: "Minnesota", MS: "Mississippi", MO: "Missouri",
+        MT: "Montana", NE: "Nebraska", NV: "Nevada", NH: "New Hampshire", NJ: "New Jersey",
+        NM: "New Mexico", NY: "New York", NC: "North Carolina", ND: "North Dakota", OH: "Ohio",
+        OK: "Oklahoma", OR: "Oregon", PA: "Pennsylvania", RI: "Rhode Island", SC: "South Carolina",
+        SD: "South Dakota", TN: "Tennessee", TX: "Texas", UT: "Utah", VT: "Vermont",
+        VA: "Virginia", WA: "Washington", WV: "West Virginia", WI: "Wisconsin", WY: "Wyoming"
+    };
+        return states[abbreviation];
+    }
+
+    const abbreviation = '{{data.states}}';
+    const fullName = getState(abbreviation);
+    document.getElementById("location").textContent = fullName + ':   ' +'{{data.latitude}}' + ',  ' + '{{data.longitude}}';
+</script>
+
+<style>
+    .container {
+    width: 80%;
+    margin: 0 auto;
+    padding-top: 20px;
+    }
+    .header{
+    padding: 10px;
+    margin-bottom: 20px;
+    }
+    .description{
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 20px;
+    flex-grow: 1;
+    overflow: auto;
+    }
+    .activity{
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 20px;
+    }
+    .header {
+    background: #f5f5f5;
+    }
+    .button {
+    display: inline-block;
+    margin-right: 10px;
+    padding: 10px 15px;
+    border: 1px solid #ccc;
+    background-color: #dfdede;
+    cursor: pointer;
+    text-align: center;
+    }
+    .button-container {
+    display: flex; 
+    flex-wrap: wrap; 
+    gap: 10px; 
+    }
+    .activities-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: flex-start;
+    }
+    .activity {
+    flex: 0 1 calc(33.333% - 10px);
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #ccc;
+    margin-bottom: 20px;
+    padding: 10px;
+    background: #f5f5f5;
+    }
+    .activity-name {
+    border-bottom: 1px solid #ccc;
+    padding: 5px;
+    background: #fff;
+    }
+
+</style>
