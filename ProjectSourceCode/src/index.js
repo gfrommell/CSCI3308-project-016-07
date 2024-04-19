@@ -320,7 +320,7 @@ app.get('/exploreParks/:keyword', (req, res) => {
               })
             })
     } else {
-      var q2 = `SELECT park_code, fullName, states, images, url FROM parks WHERE fullName ~~* '%${key}%' LIMIT 12;`
+      var q2 = `SELECT park_code, fullName, states, images, url FROM parks WHERE fullName ~~* '${key}%' OR fullName ~~* '% ${key}%' OR states ~~* '%${key}%' LIMIT 12;`
       db.any(q2)
           .then(data => {
             res.render('pages/exploreParks', {
