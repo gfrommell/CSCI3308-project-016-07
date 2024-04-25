@@ -511,20 +511,8 @@ app.post("/createTrip", (req, res) => {
 
   })
     .then(data => {
-      if(trip_id){
-        res.redirect(`/edit/${last_record.trip_id}`)
-      }
-      else{
+        res.redirect('/allTrips');  
 
-        res.redirect('/home');
-      }
-      
-
-        
-      
-      // else{
-      //   res.redirect(`/edit/${last_record.trip_id}`)
-      // }
     })
     .catch(err => {
       res.redirect('/createTrip', {
