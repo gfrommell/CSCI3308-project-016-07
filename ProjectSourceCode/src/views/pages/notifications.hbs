@@ -1,11 +1,13 @@
-<h1>Notifications</h1>
-<table class="table">
+<div class="container">
+<h1 class="pt-5">Notifications</h1><br>
+<div class="mb-5 shadow p-3 bg-body-tertiary rounded"> 
+<table class="table table-light p-1">
             <thead>
                 <tr>
-                    <th>Sender</th>
-                    <th>Message</th>
-                    <th>Date</th>
-                    <th>Actions</th>
+                    <th >Sender</th>
+                    <th >Message</th>
+                    <th >Date</th>
+                    <th >Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -25,6 +27,9 @@
                 {{/each}}
             </tbody>
         </table>
+        </div>
+
+    </div>
 
         <script>
         function handleResponse(notificationId, action, receiverUsername, tripID) {

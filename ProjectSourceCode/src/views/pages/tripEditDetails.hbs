@@ -18,7 +18,7 @@
             <div class="mb-5 shadow p-3 bg-body-tertiary rounded"> 
                 <div class="row justify-content-between"> 
                     <div class="col-4 pb-2 d-inline" >
-                        <h4>Day {{@index}}: {{formatDateIncrement trip.start_date @index}} </h4>
+                        <h3>Day {{@index}}: {{formatDateIncrement trip.start_date @index}} </h3>
                     </div>
                     {{#with (checkParksDay parks @index) as | onePark | }}
                     <div class="col-4 pb-2 d-inline">
@@ -45,7 +45,7 @@
                     {{/with}}
 
                     <tr>
-                        <td><h3>Items Scheduled</h3></td>
+                        <td><h4>Items Scheduled</h4></td>
                         
                     </tr>
 

@@ -45,15 +45,15 @@
 
   <h3 style="padding-top:50px;">Things to do</h3>
 
-  <div class="activities-grid">
+  <div class="activities-grid pt-3 pb-5">
     {{#each data3}}
 
-    <div class="card" style="width: 22rem;">
+    <div class="card shadow p-3 bg-body-tertiary rounded bo-color-light" style="width: 22rem;">
       <div class="card-body">
         <h5 class="card-title">{{this.title}}</h5>
         <h6 class="card-subtitle mb-2 text-body-secondary">{{this.timeOfDayDescription}}</h6>
         <p class="card-text">{{this.shortdescription}}</p>
-        <a href="https://www.nps.gov" class="card-link">See more at nps.gov</a>
+        <a href="https://www.nps.gov" class="card-link link-success link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">See more at nps.gov</a>
       </div>
     </div>
 
